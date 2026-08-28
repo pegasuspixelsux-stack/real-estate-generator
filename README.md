@@ -41,6 +41,7 @@ npx serve .
 
 ## `inspiration/`
 
-Holds notes on the visual direction. The reference listing graphics that informed the built-in
-presets are kept locally and git-ignored — the presets distil composition, colour and layout
-ideas only, never any brand's logo or exact design.
+Holds notes on the visual direction plus the reference listing graphics that informed the
+built-in presets. Those graphics are other companies' published marketing material, included
+here purely as design reference — the presets distil composition, colour and layout ideas only,
+never any brand's logo or exact design.
