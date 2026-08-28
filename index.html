@@ -342,12 +342,12 @@
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div class="space-y-1.5">
-              <label class="field-label" for="rZona">Zona</label>
-              <input class="input sm" id="rZona" value="Solanas" />
+              <label class="field-label" for="rZona">Zona / Name</label>
+              <input class="input sm" id="rZona" placeholder="defaults to Main Title" />
             </div>
             <div class="space-y-1.5">
               <label class="field-label" for="rType">Tipo</label>
-              <input class="input sm" id="rType" value="Condo" placeholder="Condo / Casa" />
+              <input class="input sm" id="rType" value="Beverly Hills · Villa" placeholder="Condo / Casa" />
             </div>
           </div>
           <div class="space-y-1.5">
@@ -362,10 +362,10 @@
           <div class="space-y-1.5">
             <span class="field-label">Amenities <span class="normal-case tracking-normal">(bed · bath · pool · garage)</span></span>
             <div class="grid grid-cols-2 gap-2">
-              <input class="input sm" id="rA1" value="3 Bed" aria-label="Amenity 1" />
-              <input class="input sm" id="rA2" value="2 Bath" aria-label="Amenity 2" />
+              <input class="input sm" id="rA1" value="5 Bed" aria-label="Amenity 1" />
+              <input class="input sm" id="rA2" value="6 Bath" aria-label="Amenity 2" />
               <input class="input sm" id="rA3" value="Pool" aria-label="Amenity 3" />
-              <input class="input sm" id="rA4" value="2 Garage" aria-label="Amenity 4" />
+              <input class="input sm" id="rA4" value="3 Garage" aria-label="Amenity 4" />
             </div>
           </div>
           <div class="grid grid-cols-[1fr_auto] gap-2">
@@ -535,13 +535,19 @@
   /* ---- simple text fields ---- */
   [['header','p-header'],['header','p-r-agency'],['badge','p-badge'],['title','p-title'],
    ['subtitle','p-subtitle'],['date','p-date'],['price','p-price'],['plan','p-plan'],
-   ['rZona','p-r-zona'],['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone']]
+   ['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone']]
     .forEach(([id,t]) => {
       const el = $(id), out = $(t);
       if (!el || !out) return;
       const sync = () => out.textContent = el.value.trim();
       el.addEventListener('input', sync); sync();
     });
+  // rental "Zona / Name" falls back to the Main Title so the example stays consistent
+  const rZonaEl = $('rZona'), rZonaOut = $('p-r-zona'), titleEl = $('title');
+  const syncZona = () => rZonaOut.textContent = rZonaEl.value.trim() || titleEl.value.trim();
+  rZonaEl.addEventListener('input', syncZona);
+  titleEl.addEventListener('input', syncZona);
+  syncZona();
   function setField(id, val){
     const el = $(id);
     if (!el || val == null) return;
