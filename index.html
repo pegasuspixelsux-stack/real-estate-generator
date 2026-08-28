@@ -56,6 +56,7 @@
     --title-size:96px;--script-base:74px;--script-scale:1;--tint:transparent;
     /* text-contrast theme (light text on a dark scrim) */
     --scrim:8,10,14;
+    --ov-rgb:var(--scrim);   /* overlay colour — overridden by the colour picker */
     --fg:#ffffff;
     --fg-soft:rgba(255,255,255,.8);
     --fg-line:rgba(255,255,255,.55);
@@ -75,13 +76,13 @@
   #poster .overlay{
     position:absolute;inset:0;
     background:
-      radial-gradient(120% 80% at 50% 0%, rgba(var(--scrim),0) 40%, rgba(var(--scrim),.35) 100%),
-      linear-gradient(180deg, rgba(var(--scrim),var(--o-top)) 0%, rgba(var(--scrim),calc(var(--o-top) * .35)) 38%, rgba(var(--scrim),var(--o-bot)) 100%);
+      radial-gradient(120% 80% at 50% 0%, rgba(var(--ov-rgb),0) 40%, rgba(var(--ov-rgb),.35) 100%),
+      linear-gradient(180deg, rgba(var(--ov-rgb),var(--o-top)) 0%, rgba(var(--ov-rgb),calc(var(--o-top) * .35)) 38%, rgba(var(--ov-rgb),var(--o-bot)) 100%);
   }
   #poster .tint{position:absolute;inset:0;background:var(--tint);mix-blend-mode:soft-light;}
   #poster .band{
     position:absolute;left:0;right:0;bottom:0;height:52%;opacity:0;transition:opacity .2s;
-    background:linear-gradient(180deg, rgba(var(--scrim),0) 0%, rgba(var(--scrim),.55) 42%, rgba(var(--scrim),.9) 100%);
+    background:linear-gradient(180deg, rgba(var(--ov-rgb),0) 0%, rgba(var(--ov-rgb),.55) 42%, rgba(var(--ov-rgb),.9) 100%);
   }
   #poster .frame{position:absolute;inset:var(--frame);border:1px solid var(--fg-rule);}
   #poster .inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad-y) var(--pad-x);color:var(--fg);}
@@ -169,51 +170,74 @@
     padding:230px var(--pad-x) var(--pad-y);
     align-items:center;text-align:center;
     background:linear-gradient(180deg,
-      rgba(var(--scrim),0) 0%, rgba(var(--scrim),.45) 34%, rgba(var(--scrim),.86) 66%, rgba(var(--scrim),.96) 100%);
+      rgba(var(--ov-rgb),0) 0%, rgba(var(--ov-rgb),.45) 34%, rgba(var(--ov-rgb),.86) 66%, rgba(var(--ov-rgb),.96) 100%);
   }
   #poster.layout-split .divider{margin:40px auto;}
 
   /* ---------- Rental Availability layout ---------- */
   #poster .rental-grad{position:absolute;inset:0;display:none;
     background:linear-gradient(180deg,
-      rgba(var(--scrim),0) 0%, rgba(var(--scrim),0) 26%,
-      rgba(var(--scrim),calc(var(--rg,.7) * .40)) 52%,
-      rgba(var(--scrim),calc(var(--rg,.7) * .80)) 78%,
-      rgba(var(--scrim),var(--rg,.7)) 100%);}
+      rgba(var(--ov-rgb),0) 0%, rgba(var(--ov-rgb),0) 26%,
+      rgba(var(--ov-rgb),calc(var(--rg,.7) * .40)) 52%,
+      rgba(var(--ov-rgb),calc(var(--rg,.7) * .80)) 78%,
+      rgba(var(--ov-rgb),var(--rg,.7)) 100%);}
+
+  /* top header — season/transaction line + agency line */
   #poster .rental-topbar{position:absolute;top:0;left:0;right:0;display:none;
-    background:rgba(var(--scrim),.6);padding:30px 90px;text-align:center;
-    font-family:var(--font-body);font-weight:600;font-size:26px;letter-spacing:.34em;
-    text-transform:uppercase;color:var(--fg);}
-  #poster .rental-topbar:empty{display:none;}
+    flex-direction:column;align-items:center;gap:9px;text-align:center;
+    background:rgba(var(--ov-rgb),.62);padding:28px 84px;
+    font-family:var(--font-body);color:var(--fg);}
+  #poster .rt-season{font-size:24px;font-weight:600;letter-spacing:.3em;line-height:1.3;
+    text-transform:uppercase;color:var(--accent);}
+  #poster .rt-agency{font-size:30px;font-weight:600;letter-spacing:.16em;line-height:1.25;text-transform:uppercase;}
+  #poster .rt-season:empty,#poster .rt-agency:empty{display:none;}
+
+  /* lower third panel */
   #poster .rental-panel{position:absolute;left:0;right:0;bottom:0;display:none;
-    flex-direction:column;gap:32px;padding:54px 90px 60px;color:var(--fg);font-family:var(--font-body);}
-
-  #poster .r-zona{font-family:var(--font-display);font-weight:700;font-size:64px;
-    letter-spacing:.04em;text-transform:uppercase;line-height:1.04;text-shadow:var(--glow);}
-  #poster .r-type{font-size:25px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+    flex-direction:column;gap:34px;padding:50px 84px 56px;color:var(--fg);font-family:var(--font-body);}
+  #poster .r-type{font-size:28px;font-weight:600;letter-spacing:.3em;line-height:1.3;
+    text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
   #poster .r-type:empty{display:none;}
+  #poster .r-zona{font-family:var(--font-display);font-weight:700;font-size:66px;
+    letter-spacing:.04em;text-transform:uppercase;line-height:1.05;text-shadow:var(--glow);}
 
-  #poster .r-avail{border-top:1px solid var(--fg-rule);border-bottom:1px solid var(--fg-rule);padding:26px 0;}
-  #poster .r-avail-head{font-size:19px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--fg-soft);margin-bottom:20px;}
-  #poster .r-periods{display:grid;grid-template-columns:1fr 1fr;gap:18px 44px;}
-  #poster .r-period{display:flex;align-items:center;gap:16px;font-size:30px;font-weight:600;letter-spacing:.04em;}
+  #poster .r-avail{border-top:1px solid var(--fg-rule);border-bottom:1px solid var(--fg-rule);padding:28px 0;}
+  #poster .r-avail-head{font-size:23px;font-weight:600;letter-spacing:.26em;line-height:1.3;
+    text-transform:uppercase;color:var(--fg-soft);margin-bottom:22px;}
+  #poster .r-periods{display:grid;grid-template-columns:1fr 1fr;gap:22px 44px;}
+  #poster .r-period{display:flex;align-items:center;gap:17px;font-size:34px;font-weight:600;
+    letter-spacing:.03em;line-height:1.15;}
   #poster .r-period:empty{display:none;}
-  #poster .r-period::before{content:"";flex:none;width:13px;height:13px;border:2px solid var(--accent);border-radius:50%;}
+  #poster .r-period::before{content:"";flex:none;width:14px;height:14px;border:2px solid var(--accent);border-radius:50%;}
 
-  #poster .r-amenities{display:flex;gap:18px;}
-  #poster .r-amenity{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;}
-  #poster .r-amenity svg{width:36px;height:36px;stroke:var(--accent);stroke-width:1.7;fill:none;}
-  #poster .r-amenity span{font-size:22px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;}
+  #poster .r-amenities{display:flex;justify-content:space-around;gap:32px;}
+  #poster .r-amenities:empty{display:none;}
+  #poster .r-amenity{flex:0 1 auto;min-width:140px;display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center;}
+  #poster .r-amenity svg{width:42px;height:42px;stroke:var(--accent);stroke-width:1.7;fill:none;}
+  #poster .r-amenity span{font-size:26px;font-weight:600;letter-spacing:.06em;line-height:1.2;text-transform:uppercase;}
 
-  #poster .r-cta{display:flex;align-items:center;gap:18px;padding-top:28px;border-top:1px solid var(--fg-rule);}
-  #poster .r-cta svg{flex:none;width:30px;height:30px;stroke:var(--fg);stroke-width:1.8;fill:none;}
-  #poster .r-cta .r-cta-text{font-weight:700;font-size:24px;letter-spacing:.14em;text-transform:uppercase;}
-  #poster .r-cta .r-cta-phone{margin-left:auto;font-weight:600;font-size:25px;letter-spacing:.08em;color:var(--accent);}
+  #poster .r-cta{display:flex;align-items:center;gap:18px;padding-top:30px;border-top:1px solid var(--fg-rule);}
+  #poster .r-cta svg{flex:none;width:34px;height:34px;stroke:var(--fg);stroke-width:1.8;fill:none;}
+  #poster .r-cta .r-cta-text{font-weight:700;font-size:30px;letter-spacing:.11em;line-height:1.2;text-transform:uppercase;}
+  #poster .r-cta .r-cta-phone{margin-left:auto;font-weight:600;font-size:28px;letter-spacing:.05em;line-height:1.2;color:var(--accent);}
+  #poster .r-cta .r-cta-phone:empty{display:none;}
+
+  #poster .rental-topbar[hidden],#poster .r-avail[hidden],#poster .r-cta[hidden]{display:none !important;}
 
   #poster.layout-rental .inner,#poster.layout-rental .frame,#poster.layout-rental .band{display:none;}
   #poster.layout-rental .rental-grad{display:block;}
-  #poster.layout-rental .rental-topbar{display:block;}
+  #poster.layout-rental .rental-topbar{display:flex;}
   #poster.layout-rental .rental-panel{display:flex;}
+
+  /* ---------- Optional PNG logo (all layouts) ---------- */
+  #poster .logo{position:absolute;top:var(--logo-top,56px);z-index:6;
+    width:var(--logo-w,200px);height:auto;object-fit:contain;
+    filter:drop-shadow(0 2px 14px rgba(0,0,0,.38));}
+  #poster .logo[hidden]{display:none;}
+  #poster.logo-left   .logo{left:var(--logo-x,64px);right:auto;transform:none;}
+  #poster.logo-right  .logo{right:var(--logo-x,64px);left:auto;transform:none;}
+  #poster.logo-center .logo{left:50%;right:auto;transform:translateX(-50%);}
+  #poster.theme-dark .logo{filter:drop-shadow(0 2px 14px rgba(255,255,255,.4));}
 
   /* ---------- App chrome ---------- */
   .btn-primary{
@@ -339,16 +363,24 @@
         <div class="space-y-4">
           <div>
             <span class="section-label">Rental Availability</span>
-            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Fields for the <em>Rental Availability</em> layout — agency bar, zona, period table, amenity icons and a contact call-to-action.</p>
+            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Fields for the <em>Rental Availability</em> layout — two-line header, property type, title, period table, amenities and a contact call-to-action. Empty amenity, period or CTA fields collapse automatically.</p>
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="rSeason">Top line 1 — season &amp; type</label>
+            <input class="input sm" id="rSeason" value="Temporada 2026 · Alquiler" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="rAgency">Top line 2 — agency</label>
+            <input class="input sm" id="rAgency" value="Ofrecido por Meridian Estates" placeholder="Ofrecido por … (defaults to Header)" />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div class="space-y-1.5">
-              <label class="field-label" for="rZona">Zona / Name</label>
-              <input class="input sm" id="rZona" placeholder="defaults to Main Title" />
+              <label class="field-label" for="rType">Property type</label>
+              <input class="input sm" id="rType" value="Villa" placeholder="Casa / Apartamento / Condo" />
             </div>
             <div class="space-y-1.5">
-              <label class="field-label" for="rType">Tipo</label>
-              <input class="input sm" id="rType" value="Beverly Hills · Villa" placeholder="Condo / Casa" />
+              <label class="field-label" for="rZona">Main title</label>
+              <input class="input sm" id="rZona" placeholder="location / name — defaults to Main Title" />
             </div>
           </div>
           <div class="space-y-1.5">
@@ -371,8 +403,8 @@
           </div>
           <div class="grid grid-cols-[1fr_auto] gap-2">
             <div class="space-y-1.5">
-              <label class="field-label" for="rCta">CTA heading</label>
-              <input class="input sm" id="rCta" value="Consúltenos / Call Us" />
+              <label class="field-label" for="rCta">Bottom CTA</label>
+              <input class="input sm" id="rCta" value="Consúltenos" />
             </div>
             <div class="space-y-1.5">
               <label class="field-label" for="rPhone">Phone</label>
@@ -401,6 +433,35 @@
           </label>
         </div>
 
+        <div class="space-y-3">
+          <span class="section-label">Logo <span class="normal-case tracking-normal" style="color:var(--muted)">(PNG, all layouts)</span></span>
+          <div class="flex items-center gap-2">
+            <input type="file" id="logoUpload" accept="image/png,image/svg+xml,image/*"
+              class="block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
+            <button type="button" id="logoClear" class="chip" style="padding:6px 10px" hidden>Clear</button>
+          </div>
+          <div id="logoControls" hidden class="space-y-3">
+            <div class="space-y-1.5">
+              <span class="field-label">Position</span>
+              <div id="logoPos" class="flex gap-1"></div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="field-label" for="logoSize">Size <span class="normal-case tracking-normal">(ratio locked)</span></label>
+                <span id="logoDims" class="text-xs" style="color:var(--muted)">—</span>
+              </div>
+              <input type="range" id="logoSize" min="80" max="520" value="200" class="w-full" />
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="field-label" for="logoTop">Top offset</label>
+                <span id="logoTopVal" class="text-xs" style="color:var(--muted)">56px</span>
+              </div>
+              <input type="range" id="logoTop" min="16" max="220" value="56" class="w-full" />
+            </div>
+          </div>
+        </div>
+
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <span class="field-label">Text Contrast</span>
@@ -415,7 +476,12 @@
             <span id="overlayVal" class="text-xs" style="color:var(--muted)">60%</span>
           </div>
           <input type="range" id="overlay" min="0" max="90" value="60" class="w-full" />
-          <p class="text-[11px] leading-snug" style="color:var(--muted)">Depth of the scrim between the image and the text.</p>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="color" id="overlayColor" value="#0a0c10" class="h-7 w-10 shrink-0 rounded border-0 bg-transparent" style="cursor:pointer" aria-label="Overlay colour" />
+            <span class="field-label">Overlay colour</span>
+            <button type="button" id="overlayColorReset" class="chip ml-auto" style="padding:5px 10px">Auto</button>
+          </div>
+          <p class="text-[11px] leading-snug" style="color:var(--muted)">Depth and tint of the scrim between the image and the text. <em>Auto</em> follows the Text Contrast theme.</p>
         </div>
 
       </form>
@@ -446,23 +512,27 @@
             </div>
           </div>
 
-          <div class="rental-topbar" id="p-r-agency"></div>
+          <div class="rental-topbar" id="p-r-topbar">
+            <div class="rt-season" id="p-r-season"></div>
+            <div class="rt-agency" id="p-r-agency"></div>
+          </div>
           <div class="rental-panel">
-            <div>
+            <div class="r-head">
               <div class="r-type" id="p-r-type"></div>
               <div class="r-zona" id="p-r-zona"></div>
             </div>
-            <div class="r-avail">
+            <div class="r-avail" id="p-r-availbox">
               <div class="r-avail-head" id="p-r-availhead">Disponibilidad · Availability</div>
               <div class="r-periods" id="p-r-periods"></div>
             </div>
             <div class="r-amenities" id="p-r-amenities"></div>
-            <div class="r-cta">
+            <div class="r-cta" id="p-r-ctabox">
               <svg viewBox="0 0 24 24"><path d="M21 16.5v2.6a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3 5.2 2 2 0 0 1 5 3h2.6a2 2 0 0 1 2 1.7c.1.9.35 1.8.7 2.6a2 2 0 0 1-.45 2.1l-1.1 1.1a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.45c.83.35 1.7.6 2.6.7a2 2 0 0 1 1.7 2Z"/></svg>
               <span class="r-cta-text" id="p-r-cta"></span>
               <span class="r-cta-phone" id="p-r-phone"></span>
             </div>
           </div>
+          <img class="logo" id="p-logo" alt="" crossorigin="anonymous" hidden />
         </div>
       </div>
     </main>
@@ -534,7 +604,7 @@
   let POSTER_W = 1080, POSTER_H = 1350;
 
   /* ---- simple text fields ---- */
-  [['header','p-header'],['header','p-r-agency'],['badge','p-badge'],['title','p-title'],
+  [['header','p-header'],['badge','p-badge'],['title','p-title'],
    ['subtitle','p-subtitle'],['date','p-date'],['price','p-price'],['plan','p-plan'],
    ['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone']]
     .forEach(([id,t]) => {
@@ -543,12 +613,29 @@
       const sync = () => out.textContent = el.value.trim();
       el.addEventListener('input', sync); sync();
     });
-  // rental "Zona / Name" falls back to the Main Title so the example stays consistent
+  // rental "Main title" falls back to the Main Title field so the example stays consistent
   const rZonaEl = $('rZona'), rZonaOut = $('p-r-zona'), titleEl = $('title');
   const syncZona = () => rZonaOut.textContent = rZonaEl.value.trim() || titleEl.value.trim();
   rZonaEl.addEventListener('input', syncZona);
   titleEl.addEventListener('input', syncZona);
   syncZona();
+  // rental two-line top header (agency line falls back to the Header field)
+  const rTopbar = $('p-r-topbar');
+  function syncTopbar(){
+    const season = $('rSeason').value.trim();
+    const agency = $('rAgency').value.trim() || $('header').value.trim();
+    $('p-r-season').textContent = season;
+    $('p-r-agency').textContent = agency;
+    rTopbar.hidden = !(season || agency);
+  }
+  ['rSeason','rAgency','header'].forEach(id => $(id).addEventListener('input', syncTopbar));
+  syncTopbar();
+  // rental CTA row collapses when both fields are empty
+  function syncCtaBox(){
+    $('p-r-ctabox').hidden = !($('rCta').value.trim() || $('rPhone').value.trim());
+  }
+  ['rCta','rPhone'].forEach(id => $(id).addEventListener('input', syncCtaBox));
+  syncCtaBox();
   function setField(id, val){
     const el = $(id);
     if (!el || val == null) return;
@@ -571,6 +658,7 @@
     const wrap = $('p-r-periods');
     const vals = ['rP1','rP2','rP3','rP4'].map(id => $(id).value.trim());
     wrap.innerHTML = vals.map(v => '<div class="r-period">' + (v ? esc(v) : '') + '</div>').join('');
+    $('p-r-availbox').hidden = !vals.some(Boolean);
   }
   function renderAmenities(){
     const wrap = $('p-r-amenities');
@@ -664,6 +752,74 @@
   }
   ov.addEventListener('input', () => applyOverlay());
   applyOverlay();
+
+  /* ---- overlay colour picker ---- */
+  const ovColorEl = $('overlayColor'), ovColorReset = $('overlayColorReset');
+  function hexTriplet(h){
+    const m = /^#?([0-9a-f]{6})$/i.exec((h || '').trim());
+    if (!m) return null;
+    const n = parseInt(m[1], 16);
+    return ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255);
+  }
+  ovColorEl.addEventListener('input', () => {
+    const t = hexTriplet(ovColorEl.value);
+    if (t) poster.style.setProperty('--ov-rgb', t);
+  });
+  ovColorReset.addEventListener('click', () => poster.style.removeProperty('--ov-rgb'));
+
+  /* ---- optional PNG logo (all layouts) ---- */
+  const logoImg = $('p-logo'), logoUpload = $('logoUpload'), logoClear = $('logoClear');
+  const logoControls = $('logoControls'), logoSize = $('logoSize'), logoTop = $('logoTop');
+  const logoDims = $('logoDims'), logoTopVal = $('logoTopVal'), logoPosEl = $('logoPos');
+  const logoPositions = [{ key:'left', name:'Left' }, { key:'center', name:'Center' }, { key:'right', name:'Right' }];
+  let logoPos = 'left', logoRatio = 1;
+  logoPositions.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (i === 0 ? ' active' : '');
+    b.style.padding = '4px 12px';
+    b.textContent = p.name;
+    b.addEventListener('click', () => { logoPos = p.key; applyLogo(); });
+    logoPosEl.appendChild(b);
+  });
+  function applyLogo(){
+    poster.classList.remove('logo-left', 'logo-center', 'logo-right');
+    poster.classList.add('logo-' + logoPos);
+    [...logoPosEl.children].forEach((c, i) => c.classList.toggle('active', logoPositions[i].key === logoPos));
+    const w = +logoSize.value;
+    poster.style.setProperty('--logo-w', w + 'px');
+    poster.style.setProperty('--logo-top', logoTop.value + 'px');
+    poster.style.setProperty('--logo-x', '64px');
+    logoTopVal.textContent = logoTop.value + 'px';
+    logoDims.textContent = logoImg.getAttribute('src') ? (w + ' × ' + Math.round(w / logoRatio) + ' px') : '—';
+  }
+  logoUpload.addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      logoImg.onload = () => {
+        logoRatio = (logoImg.naturalWidth / logoImg.naturalHeight) || 1;
+        logoImg.hidden = false;
+        logoControls.hidden = false;
+        logoClear.hidden = false;
+        applyLogo();
+        fit();
+      };
+      logoImg.src = r.result;
+    };
+    r.readAsDataURL(f);
+  });
+  logoClear.addEventListener('click', () => {
+    logoImg.removeAttribute('src');
+    logoImg.hidden = true;
+    logoControls.hidden = true;
+    logoClear.hidden = true;
+    logoUpload.value = '';
+    fit();
+  });
+  logoSize.addEventListener('input', applyLogo);
+  logoTop.addEventListener('input', applyLogo);
 
   /* ---- text contrast theme (light / dark / auto) ---- */
   const textThemes = [{ key:'light', name:'Light' }, { key:'dark', name:'Dark' }, { key:'auto', name:'Auto' }];
