@@ -51,24 +51,40 @@
     --font-display:"Cinzel",serif;
     --font-script:"Parisienne",cursive;
     --font-body:"Montserrat",sans-serif;
-    --accent:#d8b878;
+    --accent-lite:#d8b878;--accent-deep:#7a5a1e;--accent:var(--accent-lite);
     --pad-y:118px;--pad-x:104px;--frame:48px;
     --title-size:96px;--script-base:74px;--script-scale:1;--tint:transparent;
+    /* text-contrast theme (light text on a dark scrim) */
+    --scrim:8,10,14;
+    --fg:#ffffff;
+    --fg-soft:rgba(255,255,255,.8);
+    --fg-line:rgba(255,255,255,.55);
+    --fg-rule:rgba(255,255,255,.3);
+    --glow:0 2px 28px rgba(0,0,0,.5);
+  }
+  #poster.theme-dark{
+    --scrim:247,246,241;
+    --fg:#181a1f;
+    --fg-soft:rgba(24,26,31,.72);
+    --fg-line:rgba(24,26,31,.42);
+    --fg-rule:rgba(24,26,31,.26);
+    --glow:0 2px 26px rgba(255,255,255,.55);
+    --accent:var(--accent-deep);
   }
   #poster .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
   #poster .overlay{
     position:absolute;inset:0;
     background:
-      radial-gradient(120% 80% at 50% 0%, rgba(8,10,14,0) 40%, rgba(8,10,14,.35) 100%),
-      linear-gradient(180deg, rgba(8,10,14,var(--o-top)) 0%, rgba(8,10,14,calc(var(--o-top) * .35)) 38%, rgba(8,10,14,var(--o-bot)) 100%);
+      radial-gradient(120% 80% at 50% 0%, rgba(var(--scrim),0) 40%, rgba(var(--scrim),.35) 100%),
+      linear-gradient(180deg, rgba(var(--scrim),var(--o-top)) 0%, rgba(var(--scrim),calc(var(--o-top) * .35)) 38%, rgba(var(--scrim),var(--o-bot)) 100%);
   }
   #poster .tint{position:absolute;inset:0;background:var(--tint);mix-blend-mode:soft-light;}
   #poster .band{
     position:absolute;left:0;right:0;bottom:0;height:52%;opacity:0;transition:opacity .2s;
-    background:linear-gradient(180deg, rgba(8,10,14,0) 0%, rgba(8,10,14,.55) 42%, rgba(8,10,14,.9) 100%);
+    background:linear-gradient(180deg, rgba(var(--scrim),0) 0%, rgba(var(--scrim),.55) 42%, rgba(var(--scrim),.9) 100%);
   }
-  #poster .frame{position:absolute;inset:var(--frame);border:1px solid rgba(255,255,255,.30);}
-  #poster .inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad-y) var(--pad-x);color:#fff;}
+  #poster .frame{position:absolute;inset:var(--frame);border:1px solid var(--fg-rule);}
+  #poster .inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad-y) var(--pad-x);color:var(--fg);}
 
   #poster .eyebrow{
     display:flex;align-items:center;justify-content:center;gap:26px;
@@ -76,22 +92,22 @@
     text-transform:uppercase;text-align:center;
   }
   #poster .eyebrow:empty{display:none;}
-  #poster .eyebrow::before,#poster .eyebrow::after{content:"";height:1px;width:74px;background:rgba(255,255,255,.55);}
+  #poster .eyebrow::before,#poster .eyebrow::after{content:"";height:1px;width:74px;background:var(--fg-line);}
 
   #poster .stack{margin-top:auto;display:flex;flex-direction:column;align-items:center;text-align:center;}
   #poster .badge{
     align-self:center;font-family:var(--font-body);font-weight:500;font-size:17px;letter-spacing:.3em;
-    text-transform:uppercase;padding:9px 22px 7px;border:1px solid rgba(255,255,255,.55);
+    text-transform:uppercase;padding:9px 22px 7px;border:1px solid var(--fg-line);
     border-radius:999px;margin-bottom:26px;
   }
   #poster .badge:empty{display:none;}
   #poster .title{
     font-family:var(--font-display);font-weight:600;font-size:var(--title-size);line-height:1.06;
-    letter-spacing:.03em;text-transform:uppercase;text-shadow:0 2px 30px rgba(0,0,0,.45);
+    letter-spacing:.03em;text-transform:uppercase;text-shadow:var(--glow);
   }
   #poster .subtitle{
     font-family:var(--font-script);font-size:calc(var(--script-base) * var(--script-scale));line-height:1.12;
-    color:var(--accent);margin-top:16px;text-shadow:0 2px 24px rgba(0,0,0,.4);
+    color:var(--accent);margin-top:16px;text-shadow:var(--glow);
   }
   #poster .subtitle:empty{display:none;}
   #poster .subtitle{max-width:90%;}
@@ -106,23 +122,23 @@
   #poster .price:empty{display:none;}
   #poster .plan{
     font-family:var(--font-body);font-weight:400;font-size:21px;letter-spacing:.32em;
-    text-transform:uppercase;color:rgba(255,255,255,.82);margin-top:14px;
+    text-transform:uppercase;color:var(--fg-soft);margin-top:14px;
   }
   #poster .plan:empty{display:none;}
 
   /* spec row — three variants */
-  #poster .specs{margin-top:44px;width:100%;color:#fff;font-family:var(--font-body);}
+  #poster .specs{margin-top:44px;width:100%;color:var(--fg);font-family:var(--font-body);}
   #poster .specs.style-inline{
     display:inline-block;width:auto;font-size:24px;font-weight:400;letter-spacing:.22em;
-    text-transform:uppercase;padding-top:34px;border-top:1px solid rgba(255,255,255,.32);
+    text-transform:uppercase;padding-top:34px;border-top:1px solid var(--fg-rule);
   }
-  #poster .specs.style-columns{display:flex;justify-content:center;gap:0;border-top:1px solid rgba(255,255,255,.3);padding-top:34px;}
+  #poster .specs.style-columns{display:flex;justify-content:center;gap:0;border-top:1px solid var(--fg-rule);padding-top:34px;}
   #poster .specs.style-columns .cell{flex:1;max-width:230px;padding:0 22px;}
-  #poster .specs.style-columns .cell + .cell{border-left:1px solid rgba(255,255,255,.28);}
-  #poster .specs.style-icons{display:flex;justify-content:center;gap:70px;padding-top:34px;border-top:1px solid rgba(255,255,255,.32);}
+  #poster .specs.style-columns .cell + .cell{border-left:1px solid var(--fg-rule);}
+  #poster .specs.style-icons{display:flex;justify-content:center;gap:70px;padding-top:34px;border-top:1px solid var(--fg-rule);}
   #poster .specs.style-icons .cell{display:flex;flex-direction:column;align-items:center;gap:12px;}
   #poster .specs.style-icons svg{width:34px;height:34px;stroke:var(--accent);stroke-width:1.5;fill:none;}
-  #poster .specs .k{display:block;font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.62);}
+  #poster .specs .k{display:block;font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:var(--fg-soft);}
   #poster .specs .v{display:block;font-size:24px;letter-spacing:.12em;text-transform:uppercase;margin-top:8px;}
   #poster .specs.style-icons .v{font-size:22px;margin-top:0;}
   #poster .specs.style-icons .k{font-size:13px;margin-top:2px;}
@@ -153,9 +169,50 @@
     padding:230px var(--pad-x) var(--pad-y);
     align-items:center;text-align:center;
     background:linear-gradient(180deg,
-      rgba(8,10,14,0) 0%, rgba(8,10,14,.45) 34%, rgba(8,10,14,.86) 66%, rgba(8,10,14,.96) 100%);
+      rgba(var(--scrim),0) 0%, rgba(var(--scrim),.45) 34%, rgba(var(--scrim),.86) 66%, rgba(var(--scrim),.96) 100%);
   }
   #poster.layout-split .divider{margin:40px auto;}
+
+  /* ---------- Rental Availability layout ---------- */
+  #poster .rental-grad{position:absolute;inset:0;display:none;
+    background:linear-gradient(180deg,
+      rgba(var(--scrim),0) 0%, rgba(var(--scrim),0) 26%,
+      rgba(var(--scrim),calc(var(--rg,.7) * .40)) 52%,
+      rgba(var(--scrim),calc(var(--rg,.7) * .80)) 78%,
+      rgba(var(--scrim),var(--rg,.7)) 100%);}
+  #poster .rental-topbar{position:absolute;top:0;left:0;right:0;display:none;
+    background:rgba(var(--scrim),.6);padding:30px 90px;text-align:center;
+    font-family:var(--font-body);font-weight:600;font-size:26px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--fg);}
+  #poster .rental-topbar:empty{display:none;}
+  #poster .rental-panel{position:absolute;left:0;right:0;bottom:0;display:none;
+    flex-direction:column;gap:32px;padding:54px 90px 60px;color:var(--fg);font-family:var(--font-body);}
+
+  #poster .r-zona{font-family:var(--font-display);font-weight:700;font-size:64px;
+    letter-spacing:.04em;text-transform:uppercase;line-height:1.04;text-shadow:var(--glow);}
+  #poster .r-type{font-size:25px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-top:14px;}
+
+  #poster .r-avail{border-top:1px solid var(--fg-rule);border-bottom:1px solid var(--fg-rule);padding:26px 0;}
+  #poster .r-avail-head{font-size:19px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--fg-soft);margin-bottom:20px;}
+  #poster .r-periods{display:grid;grid-template-columns:1fr 1fr;gap:18px 44px;}
+  #poster .r-period{display:flex;align-items:center;gap:16px;font-size:30px;font-weight:600;letter-spacing:.04em;}
+  #poster .r-period:empty{display:none;}
+  #poster .r-period::before{content:"";flex:none;width:13px;height:13px;border:2px solid var(--accent);border-radius:50%;}
+
+  #poster .r-amenities{display:flex;gap:18px;}
+  #poster .r-amenity{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;}
+  #poster .r-amenity svg{width:36px;height:36px;stroke:var(--accent);stroke-width:1.7;fill:none;}
+  #poster .r-amenity span{font-size:22px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;}
+
+  #poster .r-cta{display:flex;align-items:center;gap:18px;padding-top:28px;border-top:1px solid var(--fg-rule);}
+  #poster .r-cta svg{flex:none;width:30px;height:30px;stroke:var(--fg);stroke-width:1.8;fill:none;}
+  #poster .r-cta .r-cta-text{font-weight:700;font-size:24px;letter-spacing:.14em;text-transform:uppercase;}
+  #poster .r-cta .r-cta-phone{margin-left:auto;font-weight:600;font-size:25px;letter-spacing:.08em;color:var(--accent);}
+
+  #poster.layout-rental .inner,#poster.layout-rental .frame,#poster.layout-rental .band{display:none;}
+  #poster.layout-rental .rental-grad{display:block;}
+  #poster.layout-rental .rental-topbar{display:block;}
+  #poster.layout-rental .rental-panel{display:flex;}
 
   /* ---------- App chrome ---------- */
   .btn-primary{
@@ -278,6 +335,61 @@
 
         <hr style="border-color:var(--border)" />
 
+        <div class="space-y-4">
+          <div>
+            <span class="section-label">Rental Availability</span>
+            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Fields for the <em>Rental Availability</em> layout — agency bar, zona, period table, amenity icons and a contact call-to-action.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1.5">
+              <label class="field-label" for="rZona">Zona</label>
+              <input class="input sm" id="rZona" value="Solanas" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="field-label" for="rType">Tipo</label>
+              <input class="input sm" id="rType" value="Condo" placeholder="Condo / Casa" />
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <span class="field-label">Availability periods</span>
+            <div class="grid grid-cols-2 gap-2">
+              <input class="input sm" id="rP1" value="Dec 15–31" aria-label="Period column 1 row 1" />
+              <input class="input sm" id="rP2" value="Jan 15–31" aria-label="Period column 2 row 1" />
+              <input class="input sm" id="rP3" value="Jan 1–15"  aria-label="Period column 1 row 2" />
+              <input class="input sm" id="rP4" value="Feb 1–15"  aria-label="Period column 2 row 2" />
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <span class="field-label">Amenities <span class="normal-case tracking-normal">(bed · bath · pool · garage)</span></span>
+            <div class="grid grid-cols-2 gap-2">
+              <input class="input sm" id="rA1" value="3 Bed" aria-label="Amenity 1" />
+              <input class="input sm" id="rA2" value="2 Bath" aria-label="Amenity 2" />
+              <input class="input sm" id="rA3" value="Pool" aria-label="Amenity 3" />
+              <input class="input sm" id="rA4" value="2 Garage" aria-label="Amenity 4" />
+            </div>
+          </div>
+          <div class="grid grid-cols-[1fr_auto] gap-2">
+            <div class="space-y-1.5">
+              <label class="field-label" for="rCta">CTA heading</label>
+              <input class="input sm" id="rCta" value="Consúltenos / Call Us" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="field-label" for="rPhone">Phone</label>
+              <input class="input sm" id="rPhone" value="+598 99 123 456" style="width:9.5rem" />
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="field-label" for="gradIntensity">Gradient Intensity</label>
+              <span id="gradVal" class="text-xs" style="color:var(--muted)">70%</span>
+            </div>
+            <input type="range" id="gradIntensity" min="0" max="95" value="70" class="w-full" />
+            <p class="text-[11px] leading-snug" style="color:var(--muted)">Depth of the bottom-weighted dark gradient behind the rental panel.</p>
+          </div>
+        </div>
+
+        <hr style="border-color:var(--border)" />
+
         <div class="space-y-3">
           <span class="section-label">Background Image</span>
           <div id="presets" class="grid grid-cols-4 gap-2"></div>
@@ -290,11 +402,19 @@
 
         <div class="space-y-2">
           <div class="flex items-center justify-between">
+            <span class="field-label">Text Contrast</span>
+            <div id="textTheme" class="flex gap-1"></div>
+          </div>
+          <p class="text-[11px] leading-snug" style="color:var(--muted)">Light text + dark scrim for dark photos; dark text + light scrim for bright photos. <em>Auto</em> reads the image. Applies to every layout.</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
             <label class="field-label" for="overlay">Overlay Intensity</label>
             <span id="overlayVal" class="text-xs" style="color:var(--muted)">60%</span>
           </div>
           <input type="range" id="overlay" min="0" max="90" value="60" class="w-full" />
-          <p class="text-[11px] leading-snug" style="color:var(--muted)">Darkens the image so white text stays crisp and readable.</p>
+          <p class="text-[11px] leading-snug" style="color:var(--muted)">Depth of the scrim between the image and the text.</p>
         </div>
 
       </form>
@@ -308,6 +428,7 @@
           <img class="bg" id="posterImg" alt="Property photograph" crossorigin="anonymous" />
           <div class="overlay"></div>
           <div class="tint"></div>
+          <div class="rental-grad"></div>
           <div class="band"></div>
           <div class="frame"></div>
           <div class="inner">
@@ -321,6 +442,24 @@
               <div class="price" id="p-price"></div>
               <div class="plan" id="p-plan"></div>
               <div class="specs" id="p-specs"></div>
+            </div>
+          </div>
+
+          <div class="rental-topbar" id="p-r-agency"></div>
+          <div class="rental-panel">
+            <div>
+              <div class="r-zona" id="p-r-zona"></div>
+              <div class="r-type" id="p-r-type"></div>
+            </div>
+            <div class="r-avail">
+              <div class="r-avail-head" id="p-r-availhead">Disponibilidad · Availability</div>
+              <div class="r-periods" id="p-r-periods"></div>
+            </div>
+            <div class="r-amenities" id="p-r-amenities"></div>
+            <div class="r-cta">
+              <svg viewBox="0 0 24 24"><path d="M21 16.5v2.6a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3 5.2 2 2 0 0 1 5 3h2.6a2 2 0 0 1 2 1.7c.1.9.35 1.8.7 2.6a2 2 0 0 1-.45 2.1l-1.1 1.1a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.45c.83.35 1.7.6 2.6.7a2 2 0 0 1 1.7 2Z"/></svg>
+              <span class="r-cta-text" id="p-r-cta"></span>
+              <span class="r-cta-phone" id="p-r-phone"></span>
             </div>
           </div>
         </div>
@@ -350,7 +489,8 @@
     { cls:"layout-left",      name:"Left Rail", note:"Editorial, flush left" },
     { cls:"layout-editorial", name:"Editorial", note:"Title centered on frame" },
     { cls:"layout-bar",       name:"Lower Bar", note:"Dark band, magazine cover" },
-    { cls:"layout-split",     name:"Top & Bottom", note:"Header pinned, copy in lower half" }
+    { cls:"layout-split",     name:"Top & Bottom", note:"Header pinned, copy in lower half" },
+    { cls:"layout-rental",    name:"Rental Availability", note:"Agency bar + lower info panel" }
   ];
   const fontPresets = [
     { key:"classic", name:"Classic Estate", note:"Cinzel · Parisienne",
@@ -363,10 +503,10 @@
       display:"'Cormorant Garamond', serif", script:"'Sacramento', cursive", body:"'Nunito Sans', sans-serif", scale:1.12 }
   ];
   const accentColors = [
-    { key:"brass",     name:"Brass",     hex:"#d8b878" },
-    { key:"champagne", name:"Champagne", hex:"#e8dcc0" },
-    { key:"steel",     name:"Steel",     hex:"#a7bcce" },
-    { key:"rose",      name:"Rose Gold", hex:"#e0b9bd" }
+    { key:"brass",     name:"Brass",     hex:"#d8b878", deep:"#7a5a1e" },
+    { key:"champagne", name:"Champagne", hex:"#e8dcc0", deep:"#867552" },
+    { key:"steel",     name:"Steel",     hex:"#a7bcce", deep:"#3f5b70" },
+    { key:"rose",      name:"Rose Gold", hex:"#e0b9bd", deep:"#8a4b52" }
   ];
   const specStyles = [
     { key:"inline",  name:"Inline" },
@@ -383,7 +523,8 @@
     { name:"Twilight Warmth", note:"Warm feed post",   format:"p45", layout:"layout-centered",  font:"classic", accent:"brass",     tint:"rgba(120,72,28,.28)",  overlay:58, spec:"icons" },
     { name:"Gallery Muted",   note:"Quiet & editorial", format:"p45", layout:"layout-editorial", font:"modern",  accent:"champagne", tint:"rgba(60,54,48,.25)",   overlay:40, spec:"inline" },
     { name:"Blue Hour",       note:"Cool, structured",  format:"p45", layout:"layout-centered",  font:"couture", accent:"steel",     tint:"rgba(28,54,96,.32)",   overlay:52, spec:"columns" },
-    { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" }
+    { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" },
+    { name:"Rental Availability", note:"Agency bar + periods", format:"p45", layout:"layout-rental", font:"classic", accent:"brass", tint:"rgba(18,26,42,.20)", overlay:26, spec:"icons" }
   ];
 
   const $ = id => document.getElementById(id);
@@ -392,10 +533,12 @@
   let POSTER_W = 1080, POSTER_H = 1350;
 
   /* ---- simple text fields ---- */
-  [['header','p-header'],['badge','p-badge'],['title','p-title'],['subtitle','p-subtitle'],
-   ['date','p-date'],['price','p-price'],['plan','p-plan']]
+  [['header','p-header'],['header','p-r-agency'],['badge','p-badge'],['title','p-title'],
+   ['subtitle','p-subtitle'],['date','p-date'],['price','p-price'],['plan','p-plan'],
+   ['rZona','p-r-zona'],['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone']]
     .forEach(([id,t]) => {
       const el = $(id), out = $(t);
+      if (!el || !out) return;
       const sync = () => out.textContent = el.value.trim();
       el.addEventListener('input', sync); sync();
     });
@@ -409,6 +552,36 @@
   const syncSubLen = () => subOut.classList.toggle('long', subEl.value.trim().length > 26);
   subEl.addEventListener('input', syncSubLen);
   syncSubLen();
+
+  /* ---- rental: availability periods + amenity icons ---- */
+  const amenityIcons = [
+    '<svg viewBox="0 0 24 24"><path d="M3 18v-5h18v5M3 13V8m0 5h18M6 13v-2.5A1.5 1.5 0 0 1 7.5 9H11v4M21 13V9"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 5 6.2 5 8.7A5 5 0 0 1 7 11.7C7 9.2 9 6.6 12 3z"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M2 17c1.6 0 1.6-1.3 3.2-1.3S6.8 17 8.4 17s1.6-1.3 3.2-1.3S13.2 17 14.8 17s1.6-1.3 3.2-1.3S19.6 17 21.2 17M2 12.5c1.6 0 1.6-1.3 3.2-1.3S6.8 12.5 8.4 12.5M7 15V6a2 2 0 0 1 4 0M14 15V6a2 2 0 0 1 4 0"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M4 13l1.6-4.5A2 2 0 0 1 7.5 7h9a2 2 0 0 1 1.9 1.5L20 13M4 13h16v5h-3v-2H7v2H4zM7.5 15.5h.01M16.5 15.5h.01"/></svg>'
+  ];
+  function renderPeriods(){
+    const wrap = $('p-r-periods');
+    const vals = ['rP1','rP2','rP3','rP4'].map(id => $(id).value.trim());
+    wrap.innerHTML = vals.map(v => '<div class="r-period">' + (v ? esc(v) : '') + '</div>').join('');
+  }
+  function renderAmenities(){
+    const wrap = $('p-r-amenities');
+    const vals = ['rA1','rA2','rA3','rA4'].map(id => $(id).value.trim());
+    wrap.innerHTML = vals.map((v, i) => v
+      ? '<div class="r-amenity">' + amenityIcons[i] + '<span>' + esc(v) + '</span></div>' : '').join('');
+  }
+  ['rP1','rP2','rP3','rP4'].forEach(id => $(id).addEventListener('input', renderPeriods));
+  ['rA1','rA2','rA3','rA4'].forEach(id => $(id).addEventListener('input', renderAmenities));
+
+  const gradEl = $('gradIntensity'), gradVal = $('gradVal');
+  function applyGrad(v){
+    if (v != null) gradEl.value = v;
+    poster.style.setProperty('--rg', (+gradEl.value / 100).toFixed(2));
+    gradVal.textContent = gradEl.value + '%';
+  }
+  gradEl.addEventListener('input', () => applyGrad());
+  applyGrad();
 
   /* ---- specs ---- */
   const specData = [
@@ -485,6 +658,40 @@
   ov.addEventListener('input', () => applyOverlay());
   applyOverlay();
 
+  /* ---- text contrast theme (light / dark / auto) ---- */
+  const textThemes = [{ key:'light', name:'Light' }, { key:'dark', name:'Dark' }, { key:'auto', name:'Auto' }];
+  let textThemeMode = 'light';
+  const textThemeEl = $('textTheme');
+  textThemes.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (i === 0 ? ' active' : '');
+    b.style.padding = '4px 10px';
+    b.textContent = t.name;
+    b.addEventListener('click', () => { textThemeMode = t.key; applyTextTheme(); });
+    textThemeEl.appendChild(b);
+  });
+  function imageIsLight(){
+    try {
+      const c = document.createElement('canvas');
+      c.width = 32; c.height = 40;
+      const g = c.getContext('2d');
+      g.drawImage(img, 0, 0, 32, 40);
+      const d = g.getImageData(0, 0, 32, 40).data;
+      let sum = 0, n = 0;
+      for (let i = 0; i < d.length; i += 4){
+        sum += (0.2126 * d[i] + 0.7152 * d[i+1] + 0.0722 * d[i+2]); n++;
+      }
+      return (sum / n) > 150;             // mean luminance 0–255
+    } catch (_) { return false; }          // tainted / not ready → assume dark
+  }
+  function applyTextTheme(){
+    [...textThemeEl.children].forEach((c, i) => c.classList.toggle('active', textThemes[i].key === textThemeMode));
+    const dark = textThemeMode === 'dark' || (textThemeMode === 'auto' && imageIsLight());
+    poster.classList.toggle('theme-dark', dark);
+  }
+  img.addEventListener('load', () => { if (textThemeMode === 'auto') applyTextTheme(); });
+
   /* ---- chip groups ---- */
   function chipGroup(container, items, onPick){
     const btns = items.map((it, i) => {
@@ -541,7 +748,8 @@
   });
   function setAccent(key){
     const a = accentColors.find(c => c.key === key) || accentColors[0];
-    poster.style.setProperty('--accent', a.hex);
+    poster.style.setProperty('--accent-lite', a.hex);
+    poster.style.setProperty('--accent-deep', a.deep);
     accentBtns.forEach((b,i) => b.classList.toggle('active', accentColors[i].key === key));
   }
 
@@ -751,6 +959,9 @@
   /* ---- init ---- */
   applyDesignPreset(designPresets[0]);
   renderSpecs();
+  renderPeriods();
+  renderAmenities();
+  applyTextTheme();
   fit();
 })();
 </script>
