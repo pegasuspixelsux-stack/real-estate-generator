@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Estate Studio — Social Graphic Designer</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link id="gfont" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Dancing+Script:wght@500;600;700&family=Inter:wght@300;400;500&family=Jost:wght@300;400;500&family=Montserrat:wght@300;400;500;600&family=Nunito+Sans:wght@300;400;600&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:wght@400;500;600;700&family=Sacramento&display=swap" />
+
+<style>
+  :root{
+    --ink:#0f1114; --panel:#1b1e23; --panel-2:#22262c; --border:#2c313a;
+    --text:#e7e3da; --muted:#8b909b; --brass:#c6a15b; --brass-hi:#d8b878;
+  }
+  html,body{height:100%;}
+  body{background:var(--ink);color:var(--text);font-family:"Montserrat",system-ui,sans-serif;}
+  .font-display{font-family:"Cinzel",serif;}
+
+  .field-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .section-label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);}
+  .input{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--text);
+    border-radius:6px;padding:9px 11px;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .input.sm{padding:7px 9px;font-size:12.5px;}
+  .input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(198,161,91,.18);}
+  .input::placeholder{color:#5f636d;}
+
+  .chip{
+    border:1px solid var(--border);background:var(--panel-2);color:var(--text);
+    border-radius:6px;padding:8px 10px;font-size:12px;text-align:left;line-height:1.35;
+    transition:border-color .15s,background .15s;
+  }
+  .chip:hover{border-color:var(--muted);}
+  .chip.active{border-color:var(--brass);background:rgba(198,161,91,.12);}
+  .chip .chip-sub{display:block;font-size:10px;letter-spacing:.06em;color:var(--muted);margin-top:2px;}
+
+  .dot{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);transition:transform .1s,box-shadow .15s;}
+  .dot:hover{transform:scale(1.08);}
+  .dot.active{box-shadow:0 0 0 2px var(--ink),0 0 0 4px var(--brass);}
+
+  /* ---------- Poster ---------- */
+  #poster{
+    position:relative;overflow:hidden;background:#0b0d10;transform-origin:top left;
+    width:1080px;height:1350px;
+    --font-display:"Cinzel",serif;
+    --font-script:"Parisienne",cursive;
+    --font-body:"Montserrat",sans-serif;
+    --accent:#d8b878;
+    --pad-y:118px;--pad-x:104px;--frame:48px;
+    --title-size:96px;--script-base:74px;--script-scale:1;--tint:transparent;
+  }
+  #poster .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  #poster .overlay{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(8,10,14,0) 40%, rgba(8,10,14,.35) 100%),
+      linear-gradient(180deg, rgba(8,10,14,var(--o-top)) 0%, rgba(8,10,14,calc(var(--o-top) * .35)) 38%, rgba(8,10,14,var(--o-bot)) 100%);
+  }
+  #poster .tint{position:absolute;inset:0;background:var(--tint);mix-blend-mode:soft-light;}
+  #poster .band{
+    position:absolute;left:0;right:0;bottom:0;height:52%;opacity:0;transition:opacity .2s;
+    background:linear-gradient(180deg, rgba(8,10,14,0) 0%, rgba(8,10,14,.55) 42%, rgba(8,10,14,.9) 100%);
+  }
+  #poster .frame{position:absolute;inset:var(--frame);border:1px solid rgba(255,255,255,.30);}
+  #poster .inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad-y) var(--pad-x);color:#fff;}
+
+  #poster .eyebrow{
+    display:flex;align-items:center;justify-content:center;gap:26px;
+    font-family:var(--font-body);font-weight:500;font-size:22px;letter-spacing:.42em;
+    text-transform:uppercase;text-align:center;
+  }
+  #poster .eyebrow:empty{display:none;}
+  #poster .eyebrow::before,#poster .eyebrow::after{content:"";height:1px;width:74px;background:rgba(255,255,255,.55);}
+
+  #poster .stack{margin-top:auto;display:flex;flex-direction:column;align-items:center;text-align:center;}
+  #poster .badge{
+    align-self:center;font-family:var(--font-body);font-weight:500;font-size:17px;letter-spacing:.3em;
+    text-transform:uppercase;padding:9px 22px 7px;border:1px solid rgba(255,255,255,.55);
+    border-radius:999px;margin-bottom:26px;
+  }
+  #poster .badge:empty{display:none;}
+  #poster .title{
+    font-family:var(--font-display);font-weight:600;font-size:var(--title-size);line-height:1.06;
+    letter-spacing:.03em;text-transform:uppercase;text-shadow:0 2px 30px rgba(0,0,0,.45);
+  }
+  #poster .subtitle{
+    font-family:var(--font-script);font-size:calc(var(--script-base) * var(--script-scale));line-height:1.12;
+    color:var(--accent);margin-top:16px;text-shadow:0 2px 24px rgba(0,0,0,.4);
+  }
+  #poster .subtitle:empty{display:none;}
+  #poster .subtitle{max-width:90%;}
+  #poster .subtitle.long{font-size:calc(var(--script-base) * var(--script-scale) * .6);line-height:1.2;margin-top:14px;}
+  #poster .period{
+    font-family:var(--font-body);font-weight:500;font-size:18px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--accent);margin-top:20px;
+  }
+  #poster .period:empty{display:none;}
+  #poster .divider{width:88px;height:2px;background:var(--accent);margin:44px auto;}
+  #poster .price{font-family:var(--font-display);font-weight:500;font-size:56px;letter-spacing:.06em;}
+  #poster .price:empty{display:none;}
+  #poster .plan{
+    font-family:var(--font-body);font-weight:400;font-size:21px;letter-spacing:.32em;
+    text-transform:uppercase;color:rgba(255,255,255,.82);margin-top:14px;
+  }
+  #poster .plan:empty{display:none;}
+
+  /* spec row — three variants */
+  #poster .specs{margin-top:44px;width:100%;color:#fff;font-family:var(--font-body);}
+  #poster .specs.style-inline{
+    display:inline-block;width:auto;font-size:24px;font-weight:400;letter-spacing:.22em;
+    text-transform:uppercase;padding-top:34px;border-top:1px solid rgba(255,255,255,.32);
+  }
+  #poster .specs.style-columns{display:flex;justify-content:center;gap:0;border-top:1px solid rgba(255,255,255,.3);padding-top:34px;}
+  #poster .specs.style-columns .cell{flex:1;max-width:230px;padding:0 22px;}
+  #poster .specs.style-columns .cell + .cell{border-left:1px solid rgba(255,255,255,.28);}
+  #poster .specs.style-icons{display:flex;justify-content:center;gap:70px;padding-top:34px;border-top:1px solid rgba(255,255,255,.32);}
+  #poster .specs.style-icons .cell{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  #poster .specs.style-icons svg{width:34px;height:34px;stroke:var(--accent);stroke-width:1.5;fill:none;}
+  #poster .specs .k{display:block;font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.62);}
+  #poster .specs .v{display:block;font-size:24px;letter-spacing:.12em;text-transform:uppercase;margin-top:8px;}
+  #poster .specs.style-icons .v{font-size:22px;margin-top:0;}
+  #poster .specs.style-icons .k{font-size:13px;margin-top:2px;}
+
+  /* layouts */
+  #poster.layout-left .eyebrow{justify-content:flex-start;}
+  #poster.layout-left .eyebrow::before{display:none;}
+  #poster.layout-left .stack{align-items:flex-start;text-align:left;}
+  #poster.layout-left .badge{align-self:flex-start;}
+  #poster.layout-left .divider{margin:44px 0;}
+  #poster.layout-editorial .period,#poster.layout-centered .period{align-self:center;}
+  #poster.layout-left .specs.style-columns,#poster.layout-left .specs.style-icons{justify-content:flex-start;}
+  #poster.layout-left .specs.style-columns .cell:first-child{padding-left:0;}
+
+  #poster.layout-editorial .inner{justify-content:center;}
+  #poster.layout-editorial .eyebrow{position:absolute;top:var(--pad-y);left:var(--pad-x);right:var(--pad-x);}
+  #poster.layout-editorial .stack{margin-top:0;}
+
+  #poster.layout-bar .band{opacity:1;}
+
+  /* Split: header pinned top, all detail copy in a gradient-backed lower half */
+  #poster.layout-split .inner{padding:0;}
+  #poster.layout-split .eyebrow{
+    position:absolute;top:0;left:0;right:0;padding:var(--pad-y) var(--pad-x) 0;
+  }
+  #poster.layout-split .stack{
+    position:absolute;left:0;right:0;bottom:0;margin:0;
+    padding:230px var(--pad-x) var(--pad-y);
+    align-items:center;text-align:center;
+    background:linear-gradient(180deg,
+      rgba(8,10,14,0) 0%, rgba(8,10,14,.45) 34%, rgba(8,10,14,.86) 66%, rgba(8,10,14,.96) 100%);
+  }
+  #poster.layout-split .divider{margin:40px auto;}
+
+  /* ---------- App chrome ---------- */
+  .btn-primary{
+    background:var(--brass);color:#1a1408;font-weight:600;letter-spacing:.06em;
+    border-radius:6px;padding:10px 20px;font-size:13px;text-transform:uppercase;
+    transition:background .15s,transform .05s;white-space:nowrap;
+  }
+  .btn-primary:hover{background:var(--brass-hi);}
+  .btn-primary:active{transform:translateY(1px);}
+  .btn-primary:disabled{opacity:.55;cursor:progress;}
+
+  .swatch{border:1px solid var(--border);border-radius:6px;overflow:hidden;aspect-ratio:4/5;cursor:pointer;transition:border-color .15s;}
+  .swatch:hover{border-color:var(--muted);}
+  .swatch.active{border-color:var(--brass);box-shadow:0 0 0 2px rgba(198,161,91,.3);}
+  .swatch img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  input[type="range"]{accent-color:var(--brass);}
+  *:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-thumb{background:#2f343d;border-radius:10px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex h-full flex-col">
+
+  <header class="flex items-center justify-between border-b px-6 py-3" style="border-color:var(--border)">
+    <div class="flex items-baseline gap-3">
+      <span class="font-display text-lg font-semibold tracking-[.22em]" style="color:var(--brass)">ESTATE STUDIO</span>
+      <span class="field-label hidden sm:block">Social Graphic Designer · <span id="dimLabel">1080 × 1350</span></span>
+    </div>
+    <button id="downloadBtn" class="btn-primary">Download Design</button>
+  </header>
+
+  <div class="flex min-h-0 flex-1">
+
+    <!-- Left: controls -->
+    <aside class="w-full max-w-[400px] shrink-0 overflow-y-auto border-r p-6" style="border-color:var(--border);background:var(--panel)">
+      <form id="form" class="space-y-6" autocomplete="off">
+
+        <div class="space-y-3">
+          <span class="section-label">Design Preset</span>
+          <div id="designPresets" class="grid grid-cols-2 gap-2"></div>
+          <p class="text-[11px] leading-snug" style="color:var(--muted)">A starting point — format, layout, type, colour and spec style in one tap. Tune anything below.</p>
+        </div>
+
+        <hr style="border-color:var(--border)" />
+
+        <div class="space-y-2">
+          <label class="section-label" for="importText">Quick Import Text</label>
+          <textarea id="importText" rows="5" class="input" style="resize:vertical;line-height:1.5"
+            placeholder="Paste a block of copy. Use markers like&#10;Header: …  Title: …  Subtitle: …&#10;Price: …  Date: …  Beds: 4  Baths: 5&#10;— or just one item per line."></textarea>
+          <button type="button" id="parseBtn" class="btn-primary w-full" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border)">Parse Text</button>
+          <p id="parseNote" class="text-[11px] leading-snug" style="color:var(--muted)">Recognises Header, Title, Subtitle, Location, Price, Payment Plan, Date/Period, Beds, Baths and Area — in English or Spanish. Unlabelled lines fill Header → Title → Subtitle in order.</p>
+        </div>
+
+        <hr style="border-color:var(--border)" />
+
+        <div class="space-y-4">
+          <span class="section-label">Content</span>
+          <div class="space-y-1.5">
+            <label class="field-label" for="header">Header</label>
+            <input class="input" id="header" value="Presented By Meridian Estates" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="badge">Badge <span class="normal-case tracking-normal">(optional pill)</span></label>
+            <input class="input" id="badge" placeholder="e.g. Presidential Penthouse" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="title">Main Title</label>
+            <input class="input" id="title" value="The Hillcrest Residence" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="subtitle">Subtitle</label>
+            <input class="input" id="subtitle" value="Beverly Hills, California" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="date">Date / Period <span class="normal-case tracking-normal">(optional)</span></label>
+            <input class="input" id="date" placeholder="e.g. Handover Q4 2026" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="price">Pricing</label>
+            <input class="input" id="price" value="$4,750,000" />
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="plan">Payment Plan</label>
+            <input class="input" id="plan" value="20% Down · 36-Month Plan" />
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="field-label">Specs</span>
+            <div id="specStyle" class="flex gap-1"></div>
+          </div>
+          <div id="specRows" class="space-y-2"></div>
+        </div>
+
+        <hr style="border-color:var(--border)" />
+
+        <div class="space-y-3">
+          <span class="section-label">Format</span>
+          <div id="formats" class="grid grid-cols-2 gap-2"></div>
+        </div>
+        <div class="space-y-3">
+          <span class="section-label">Layout</span>
+          <div id="layouts" class="grid grid-cols-2 gap-2"></div>
+        </div>
+        <div class="space-y-3">
+          <span class="section-label">Font Pairing</span>
+          <div id="fonts" class="grid grid-cols-2 gap-2"></div>
+        </div>
+        <div class="space-y-3">
+          <span class="section-label">Accent Colour</span>
+          <div id="accents" class="flex gap-3"></div>
+        </div>
+
+        <hr style="border-color:var(--border)" />
+
+        <div class="space-y-3">
+          <span class="section-label">Background Image</span>
+          <div id="presets" class="grid grid-cols-4 gap-2"></div>
+          <label class="block">
+            <span class="field-label">Upload your own</span>
+            <input type="file" id="upload" accept="image/*"
+              class="mt-1.5 block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
+          </label>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="field-label" for="overlay">Overlay Intensity</label>
+            <span id="overlayVal" class="text-xs" style="color:var(--muted)">60%</span>
+          </div>
+          <input type="range" id="overlay" min="0" max="90" value="60" class="w-full" />
+          <p class="text-[11px] leading-snug" style="color:var(--muted)">Darkens the image so white text stays crisp and readable.</p>
+        </div>
+
+      </form>
+    </aside>
+
+    <!-- Right: live preview -->
+    <main id="previewCol" class="relative flex min-w-0 flex-1 items-center justify-center overflow-hidden p-4"
+      style="background:radial-gradient(circle at 50% 30%, #1a1d22 0%, #0d0f12 70%)">
+      <div id="stageWrap" style="box-shadow:0 40px 90px -20px rgba(0,0,0,.7)">
+        <div id="poster" class="layout-centered">
+          <img class="bg" id="posterImg" alt="Property photograph" crossorigin="anonymous" />
+          <div class="overlay"></div>
+          <div class="tint"></div>
+          <div class="band"></div>
+          <div class="frame"></div>
+          <div class="inner">
+            <div class="eyebrow" id="p-header"></div>
+            <div class="stack">
+              <div class="badge" id="p-badge"></div>
+              <div class="title" id="p-title"></div>
+              <div class="subtitle" id="p-subtitle"></div>
+              <div class="period" id="p-date"></div>
+              <div class="divider"></div>
+              <div class="price" id="p-price"></div>
+              <div class="plan" id="p-plan"></div>
+              <div class="specs" id="p-specs"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const presetUrls = [
+    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80"
+  ];
+
+  const formatPresets = [
+    { key:"p45", name:"Portrait 4:5",   note:"1080 × 1350 · feed",    w:1080, h:1350, padY:118, padX:104, frame:48, title:96,  script:74 },
+    { key:"sq",  name:"Square 1:1",     note:"1080 × 1080 · feed",    w:1080, h:1080, padY:92,  padX:92,  frame:44, title:82,  script:62 },
+    { key:"ls",  name:"Landscape 16:9", note:"1920 × 1080 · web",     w:1920, h:1080, padY:84,  padX:140, frame:44, title:88,  script:62 },
+    { key:"st",  name:"Story 9:16",     note:"1080 × 1920 · stories", w:1080, h:1920, padY:150, padX:104, frame:52, title:106, script:84 }
+  ];
+  const layoutPresets = [
+    { cls:"layout-centered",  name:"Centered",  note:"Symmetrical, anchored low" },
+    { cls:"layout-left",      name:"Left Rail", note:"Editorial, flush left" },
+    { cls:"layout-editorial", name:"Editorial", note:"Title centered on frame" },
+    { cls:"layout-bar",       name:"Lower Bar", note:"Dark band, magazine cover" },
+    { cls:"layout-split",     name:"Top & Bottom", note:"Header pinned, copy in lower half" }
+  ];
+  const fontPresets = [
+    { key:"classic", name:"Classic Estate", note:"Cinzel · Parisienne",
+      display:"'Cinzel', serif", script:"'Parisienne', cursive", body:"'Montserrat', sans-serif", scale:1.0 },
+    { key:"modern", name:"Modern Serif", note:"Playfair · Dancing",
+      display:"'Playfair Display', serif", script:"'Dancing Script', cursive", body:"'Jost', sans-serif", scale:0.94 },
+    { key:"couture", name:"Haute Couture", note:"Bodoni · Pinyon",
+      display:"'Bodoni Moda', serif", script:"'Pinyon Script', cursive", body:"'Inter', sans-serif", scale:1.05 },
+    { key:"coastal", name:"Coastal Calm", note:"Cormorant · Sacramento",
+      display:"'Cormorant Garamond', serif", script:"'Sacramento', cursive", body:"'Nunito Sans', sans-serif", scale:1.12 }
+  ];
+  const accentColors = [
+    { key:"brass",     name:"Brass",     hex:"#d8b878" },
+    { key:"champagne", name:"Champagne", hex:"#e8dcc0" },
+    { key:"steel",     name:"Steel",     hex:"#a7bcce" },
+    { key:"rose",      name:"Rose Gold", hex:"#e0b9bd" }
+  ];
+  const specStyles = [
+    { key:"inline",  name:"Inline" },
+    { key:"columns", name:"Columns" },
+    { key:"icons",   name:"Icons" }
+  ];
+  const specIcons = [
+    '<svg viewBox="0 0 24 24"><path d="M3 18v-5h18v5M3 13V7m0 6h18M6 13v-2.5A1.5 1.5 0 0 1 7.5 9H11v4M21 13V9"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 5 6.2 5 8.7A5 5 0 0 1 7 11.7C7 9.2 9 6.6 12 3z"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'
+  ];
+  // Design presets distilled from luxury-listing references (composition & treatment only).
+  const designPresets = [
+    { name:"Twilight Warmth", note:"Warm feed post",   format:"p45", layout:"layout-centered",  font:"classic", accent:"brass",     tint:"rgba(120,72,28,.28)",  overlay:58, spec:"icons" },
+    { name:"Gallery Muted",   note:"Quiet & editorial", format:"p45", layout:"layout-editorial", font:"modern",  accent:"champagne", tint:"rgba(60,54,48,.25)",   overlay:40, spec:"inline" },
+    { name:"Blue Hour",       note:"Cool, structured",  format:"p45", layout:"layout-centered",  font:"couture", accent:"steel",     tint:"rgba(28,54,96,.32)",   overlay:52, spec:"columns" },
+    { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const poster = $('poster'), stageWrap = $('stageWrap'), previewCol = $('previewCol');
+  const img = $('posterImg'), dimLabel = $('dimLabel');
+  let POSTER_W = 1080, POSTER_H = 1350;
+
+  /* ---- simple text fields ---- */
+  [['header','p-header'],['badge','p-badge'],['title','p-title'],['subtitle','p-subtitle'],
+   ['date','p-date'],['price','p-price'],['plan','p-plan']]
+    .forEach(([id,t]) => {
+      const el = $(id), out = $(t);
+      const sync = () => out.textContent = el.value.trim();
+      el.addEventListener('input', sync); sync();
+    });
+  function setField(id, val){
+    const el = $(id);
+    if (!el || val == null) return;
+    el.value = String(val).trim();
+    el.dispatchEvent(new Event('input'));
+  }
+  const subEl = $('subtitle'), subOut = $('p-subtitle');
+  const syncSubLen = () => subOut.classList.toggle('long', subEl.value.trim().length > 26);
+  subEl.addEventListener('input', syncSubLen);
+  syncSubLen();
+
+  /* ---- specs ---- */
+  const specData = [
+    { k:"Bedrooms",  v:"5 Bed" },
+    { k:"Bathrooms", v:"6 Bath" },
+    { k:"Interior",  v:"6,200 Sq Ft" }
+  ];
+  let specStyle = "inline";
+
+  const specRows = $('specRows');
+  specData.forEach((row, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'grid grid-cols-[7rem_1fr] gap-2';
+    wrap.innerHTML =
+      '<input class="input sm" data-si="'+i+'" data-sk="k" value="'+row.k+'" aria-label="Spec '+(i+1)+' label">' +
+      '<input class="input sm" data-si="'+i+'" data-sk="v" value="'+row.v+'" aria-label="Spec '+(i+1)+' value">';
+    specRows.appendChild(wrap);
+  });
+  specRows.addEventListener('input', e => {
+    const t = e.target;
+    specData[+t.dataset.si][t.dataset.sk] = t.value;
+    renderSpecs();
+  });
+  function setSpec(i, val){
+    if (i < 0 || i >= specData.length) return;
+    specData[i].v = val;
+    const input = specRows.querySelector('input[data-si="'+i+'"][data-sk="v"]');
+    if (input) input.value = val;
+    renderSpecs();
+  }
+
+  const specStyleEl = $('specStyle');
+  specStyles.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (i === 0 ? ' active' : '');
+    b.style.padding = '4px 9px';
+    b.textContent = s.name;
+    b.addEventListener('click', () => { setSpecStyle(s.key); });
+    specStyleEl.appendChild(b);
+  });
+  function setSpecStyle(key){
+    specStyle = key;
+    [...specStyleEl.children].forEach((c,i) => c.classList.toggle('active', specStyles[i].key === key));
+    renderSpecs();
+  }
+  function renderSpecs(){
+    const out = $('p-specs');
+    const rows = specData.filter(r => r.v.trim() || r.k.trim());
+    out.className = 'specs style-' + specStyle;
+    if (!rows.length){ out.innerHTML = ''; return; }
+    if (specStyle === 'inline'){
+      out.textContent = rows.map(r => r.v.trim()).filter(Boolean).join('  ·  ');
+    } else if (specStyle === 'columns'){
+      out.innerHTML = rows.map(r =>
+        '<div class="cell"><span class="k">'+esc(r.k)+'</span><span class="v">'+esc(r.v)+'</span></div>').join('');
+    } else {
+      out.innerHTML = rows.map((r,i) =>
+        '<div class="cell">'+specIcons[i % specIcons.length]+'<span class="v">'+esc(r.v)+'</span><span class="k">'+esc(r.k)+'</span></div>').join('');
+    }
+    fit();
+  }
+  function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  /* ---- overlay ---- */
+  const ov = $('overlay'), ovVal = $('overlayVal');
+  function applyOverlay(v){
+    if (v != null){ ov.value = v; }
+    const f = +ov.value / 100;
+    poster.style.setProperty('--o-top', f.toFixed(2));
+    poster.style.setProperty('--o-bot', Math.min(0.95, f + 0.30).toFixed(2));
+    ovVal.textContent = ov.value + '%';
+  }
+  ov.addEventListener('input', () => applyOverlay());
+  applyOverlay();
+
+  /* ---- chip groups ---- */
+  function chipGroup(container, items, onPick){
+    const btns = items.map((it, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip' + (i === 0 ? ' active' : '');
+      b.innerHTML = it.name + (it.note ? '<span class="chip-sub">'+it.note+'</span>' : '');
+      b.addEventListener('click', () => { select(i); onPick(items[i]); });
+      container.appendChild(b);
+      return b;
+    });
+    function select(i){ btns.forEach((b,j) => b.classList.toggle('active', i === j)); }
+    return { select };
+  }
+
+  const fmtGroup = chipGroup($('formats'), formatPresets, applyFormat);
+  function applyFormat(f){
+    POSTER_W = f.w; POSTER_H = f.h;
+    poster.style.width = f.w + 'px'; poster.style.height = f.h + 'px';
+    poster.style.setProperty('--pad-y', f.padY + 'px');
+    poster.style.setProperty('--pad-x', f.padX + 'px');
+    poster.style.setProperty('--frame', f.frame + 'px');
+    poster.style.setProperty('--title-size', f.title + 'px');
+    poster.style.setProperty('--script-base', f.script + 'px');
+    dimLabel.textContent = f.w + ' × ' + f.h;
+    fit();
+  }
+
+  const layoutGroup = chipGroup($('layouts'), layoutPresets, lp => {
+    layoutPresets.forEach(p => poster.classList.remove(p.cls));
+    poster.classList.add(lp.cls);
+    fit();
+  });
+
+  const fontGroup = chipGroup($('fonts'), fontPresets, fp => {
+    poster.style.setProperty('--font-display', fp.display);
+    poster.style.setProperty('--font-script', fp.script);
+    poster.style.setProperty('--font-body', fp.body);
+    poster.style.setProperty('--script-scale', fp.scale);
+  });
+
+  /* ---- accent dots ---- */
+  const accentsEl = $('accents');
+  const accentBtns = accentColors.map((a, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'dot' + (i === 0 ? ' active' : '');
+    b.style.background = a.hex;
+    b.title = a.name;
+    b.setAttribute('aria-label', 'Accent colour ' + a.name);
+    b.addEventListener('click', () => setAccent(a.key));
+    accentsEl.appendChild(b);
+    return b;
+  });
+  function setAccent(key){
+    const a = accentColors.find(c => c.key === key) || accentColors[0];
+    poster.style.setProperty('--accent', a.hex);
+    accentBtns.forEach((b,i) => b.classList.toggle('active', accentColors[i].key === key));
+  }
+
+  /* ---- design presets ---- */
+  function applyDesignPreset(dp){
+    const fi = formatPresets.findIndex(f => f.key === dp.format);
+    const li = layoutPresets.findIndex(l => l.cls === dp.layout);
+    const ti = fontPresets.findIndex(f => f.key === dp.font);
+    fmtGroup.select(fi);   applyFormat(formatPresets[fi]);
+    layoutGroup.select(li);
+    layoutPresets.forEach(p => poster.classList.remove(p.cls));
+    poster.classList.add(dp.layout);
+    fontGroup.select(ti);  applyFont(fontPresets[ti]);
+    setAccent(dp.accent);
+    poster.style.setProperty('--tint', dp.tint);
+    applyOverlay(dp.overlay);
+    setSpecStyle(dp.spec);
+    fit();
+  }
+  const designGroup = chipGroup($('designPresets'), designPresets, applyDesignPreset);
+  function applyFont(fp){
+    poster.style.setProperty('--font-display', fp.display);
+    poster.style.setProperty('--font-script', fp.script);
+    poster.style.setProperty('--font-body', fp.body);
+    poster.style.setProperty('--script-scale', fp.scale);
+  }
+
+  /* ---- background image ---- */
+  const presetsEl = $('presets');
+  function setActiveSwatch(node){
+    presetsEl.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s === node));
+  }
+  presetUrls.forEach((url, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'swatch' + (i === 0 ? ' active' : '');
+    b.innerHTML = '<img src="'+url+'" crossorigin="anonymous" alt="Preset background '+(i+1)+'">';
+    b.addEventListener('click', () => { img.src = url; setActiveSwatch(b); });
+    presetsEl.appendChild(b);
+  });
+  img.src = presetUrls[0];
+  $('upload').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { img.src = reader.result; setActiveSwatch(null); };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---- fit ---- */
+  function fit(){
+    const availW = previewCol.clientWidth - 32, availH = previewCol.clientHeight - 32;
+    const scale = Math.max(0.1, Math.min(availW / POSTER_W, availH / POSTER_H, 1));
+    poster.style.transform = 'scale(' + scale + ')';
+    stageWrap.style.width  = (POSTER_W * scale) + 'px';
+    stageWrap.style.height = (POSTER_H * scale) + 'px';
+  }
+  new ResizeObserver(fit).observe(previewCol);
+  window.addEventListener('resize', fit);
+
+  /* ---- embed web fonts as data URIs so PNG export matches the preview ---- */
+  const fontEmbedPromise = (async () => {
+    try {
+      const css = await (await fetch($('gfont').href, { mode:'cors' })).text();
+      const blocks = css.match(/\/\*\s*(latin|latin-ext)\s*\*\/\s*@font-face\s*{[^}]+}/g) || [];
+      let joined = blocks.join('\n');
+      const urls = [...new Set(joined.match(/https:\/\/fonts\.gstatic\.com[^)]+/g) || [])];
+      await Promise.all(urls.map(async u => {
+        try {
+          const buf = await (await fetch(u)).arrayBuffer();
+          let bin = ''; const bytes = new Uint8Array(buf);
+          for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+          joined = joined.split(u).join('data:font/woff2;base64,' + btoa(bin));
+        } catch (_) {}
+      }));
+      return joined;
+    } catch (e) { console.warn('Font embed prep failed; export will use system fallbacks.', e); return ''; }
+  })();
+
+  /* ---- export ---- */
+  const btn = $('downloadBtn');
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = 'Rendering…';
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      const fontEmbedCSS = await Promise.race([
+        fontEmbedPromise,
+        new Promise(res => setTimeout(() => res(''), 15000))
+      ]);
+      const dataUrl = await htmlToImage.toPng(poster, {
+        width: POSTER_W, height: POSTER_H, pixelRatio: 2,
+        fontEmbedCSS: fontEmbedCSS || undefined,
+        style: { transform: 'scale(1)', transformOrigin: 'top left' }
+      });
+      const a = document.createElement('a');
+      const slug = ($('title').value || 'design').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      a.download = 'estate-' + (slug || 'design') + '-' + POSTER_W + 'x' + POSTER_H + '.png';
+      a.href = dataUrl;
+      a.click();
+    } catch (err) {
+      console.error(err);
+      alert('Export failed. If a preset image is selected, a network issue may be blocking it — try uploading your own image instead.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  });
+
+  /* ---- Quick Import parser ---- */
+  const DIACRITICS = new RegExp('[' + String.fromCharCode(0x300) + '-' + String.fromCharCode(0x36f) + ']', 'g');
+  const norm = s => s.toLowerCase().normalize('NFD').replace(DIACRITICS, '').trim();
+  const IMPORT_ALIASES = {
+    header:   ['header','heading','eyebrow','presented by','presented','brand','agency','company','developer','encabezado','presenta','presentado por','marca','desarrolladora'],
+    badge:    ['badge','tag','label','pill','ribbon','etiqueta','distintivo','sello'],
+    title:    ['title','main title','headline','name','property','project','listing','titulo','titulo principal','encabezamiento','nombre','propiedad','proyecto'],
+    subtitle: ['subtitle','sub title','tagline','details','detail','description','desc','subtitulo','bajada','descripcion','detalle','detalles','lema'],
+    location: ['location','address','area','neighbourhood','neighborhood','district','ubicacion','direccion','zona','barrio','localidad','sector'],
+    price:    ['price','pricing','cost','from','starting price','starting from','asking','asking price','value','precio','desde','valor','costo','precio desde','inversion'],
+    plan:     ['payment plan','plan','payment','instalment','installment','booking','financing','finance','plan de pago','pago','forma de pago','financiacion','reserva','cuotas','anticipo'],
+    availability: ['availability','available','disponibilidad','disponible','vacancy'],
+    date:     ['date','dates','period','when','launch','launching','completion','handover','possession','season','delivery','fecha','fechas','periodo','período','temporada','entrega','cuando','plazo','vigencia'],
+    beds:     ['beds','bed','bedrooms','bedroom','br','dormitorios','dormitorio','habitaciones','habitacion','recamaras','recamara','ambientes','cuartos'],
+    baths:    ['baths','bath','bathrooms','bathroom','ba','banos','bano','aseos','toilets','sanitarios'],
+    area:     ['area','size','surface','interior','built area','carpet area','sqft','sq ft','superficie','metros','metraje','m2','tamano','dimensiones']
+  };
+  function keyOf(kraw){
+    const k = norm(kraw).replace(/[:=.\-–—]+$/, '').trim();
+    for (const [field, aliases] of Object.entries(IMPORT_ALIASES)) if (aliases.includes(k)) return field;
+    return null;
+  }
+  const MONTHS = 'jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december|ene|abr|ago|dic|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre';
+  const looksPrice = l => /(?:[$€£₹]|\b(?:usd|eur|gbp|pkr|aed|inr|rs|ars|uyu|mxn)\b)\s?[\d.,]+|\b[\d.,]+\s?(?:million|mill(?:o|ó)n(?:es)?|mn|m|k)\b/i.test(l) && /\d/.test(l);
+  const looksSpecs = l => /\b\d+(?:[.,]\d+)?\s*(?:beds?|bd|br|bedrooms?|bath(?:room)?s?|ba\b|dormitor\w*|ba[nñ]os?|habitac\w*|recamar\w*|ambientes?|cuartos?)/i.test(l)
+      || /\b[\d.,]+\s*(?:sq\s?\.?\s?ft|sqft|sq\s?\.?\s?m|sqm|m2|m²|metros?)/i.test(l);
+  const looksDate = l => new RegExp('\\b(?:19|20)\\d{2}\\b|\\bq[1-4]\\b|\\b(?:'+MONTHS+')\\b|\\b(?:quincena|temporada|semana|weekend|week)\\b|\\b\\d+\\s*(?:years?|months?|a[nñ]os?|meses?|dias?)\\b', 'i').test(l);
+
+  function applySpecsFromLine(line){
+    const bd = line.match(/(\d+)\s*(?:beds?|bd|br|bedrooms?|dormitor\w*|habitac\w*|recamar\w*|ambientes?|cuartos?)/i);
+    const ba = line.match(/(\d+(?:[.,]\d+)?)\s*(?:bath(?:room)?s?|ba\b|ba[nñ]os?|aseos?|sanitarios?)/i);
+    const ar = line.match(/([\d.,]+)\s*(?:sq\s?\.?\s?ft|sqft|sq\s?\.?\s?m|sqm|m2|m²|metros?)/i);
+    if (bd) setSpec(0, bd[1] + ' Bed');
+    if (ba) setSpec(1, ba[1] + ' Bath');
+    if (ar) setSpec(2, ar[1].replace(/\.(?=\d{3}\b)/g, ',') + ' Sq Ft');
+    return !!(bd || ba || ar);
+  }
+
+  function parseImport(raw){
+    const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return { count: 0 };
+    const found = {};
+    const loose = [];
+    const set = (f, v) => { if (found[f] == null) found[f] = v; };
+
+    for (const line of lines){
+      const m = line.match(/^([A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'\/]{2,40}?)\s*[:=]\s*(.+)$/)
+             || line.match(/^([A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'\/]{2,40}?)\s+[–—]\s+(.+)$/);
+      if (m){
+        const field = keyOf(m[1]);
+        const val = m[2].trim();
+        if (field === 'beds' || field === 'baths' || field === 'area'){ applySpecsFromLine(val || line); continue; }
+        if (field){ set(field, val); continue; }
+      }
+      loose.push(line);
+    }
+
+    const rest = [];
+    for (const line of loose){
+      if (found.price == null && looksPrice(line)){ found.price = line; continue; }
+      if (looksSpecs(line) && applySpecsFromLine(line)){ continue; }
+      if (found.date == null && looksDate(line)){ found.date = line; continue; }
+      rest.push(line);
+    }
+
+    // reconcile secondary markers
+    if (found.location != null && found.subtitle == null) found.subtitle = found.location;
+    if (found.availability != null){
+      if (found.plan == null) found.plan = found.availability;
+      else if (found.date == null) found.date = found.availability;
+    }
+
+    // positional fill for still-empty slots, then leftovers
+    const slots = ['header','title','subtitle'].filter(s => found[s] == null);
+    let unmapped = 0;
+    rest.forEach((line, i) => {
+      if (i < slots.length) found[slots[i]] = line;
+      else if (found.badge == null && line.length <= 28) found.badge = line;
+      else unmapped++;
+    });
+
+    ['header','badge','title','subtitle','date','price','plan'].forEach(f => {
+      if (found[f] != null) setField(f, found[f]);
+    });
+    fit();
+    return { count: lines.length, unmapped, fields: Object.keys(found) };
+  }
+
+  const parseBtn = $('parseBtn'), parseNote = $('parseNote'), importText = $('importText');
+  parseBtn.addEventListener('click', () => {
+    const res = parseImport(importText.value);
+    if (!res.count){ parseNote.textContent = 'Nothing to parse — paste some copy first.'; return; }
+    parseNote.textContent = 'Mapped ' + res.count + ' line' + (res.count === 1 ? '' : 's')
+      + (res.unmapped ? ' · ' + res.unmapped + ' unmapped' : '') + '. Adjust any field below.';
+  });
+
+  /* ---- init ---- */
+  applyDesignPreset(designPresets[0]);
+  renderSpecs();
+  fit();
+})();
+</script>
+</body>
+</html>
