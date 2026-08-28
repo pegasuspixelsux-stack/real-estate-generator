@@ -229,6 +229,35 @@
   #poster.layout-rental .rental-topbar{display:flex;}
   #poster.layout-rental .rental-panel{display:flex;}
 
+  /* ---------- Solid-colour background mode (all layouts) ---------- */
+  #poster .solid-bg{position:absolute;inset:0;background:var(--bg-solid,#12161b);display:none;}
+  #poster.bg-solid .solid-bg{display:block;}
+  #poster.bg-solid .bg{display:none;}
+
+  /* ---------- Cover / End Page layout ---------- */
+  #poster .cover{position:absolute;inset:0;display:none;flex-direction:column;
+    align-items:center;text-align:center;gap:38px;
+    padding:var(--pad-y) var(--pad-x);justify-content:var(--cover-align,center);
+    color:var(--fg);font-family:var(--font-body);}
+  #poster .cover-logo{width:var(--cover-logo-w,360px);height:auto;object-fit:contain;
+    filter:drop-shadow(0 2px 20px rgba(0,0,0,.35));}
+  #poster .cover-logo[hidden]{display:none;}
+  #poster.theme-dark .cover-logo{filter:drop-shadow(0 2px 20px rgba(255,255,255,.4));}
+  #poster .cover-title{font-family:var(--font-display);font-weight:600;font-size:80px;
+    letter-spacing:.05em;text-transform:uppercase;line-height:1.08;text-shadow:var(--glow);}
+  #poster .cover-title:empty{display:none;}
+  #poster .cover-sub{font-family:var(--font-script);
+    font-size:calc(var(--script-base) * var(--script-scale));color:var(--accent);line-height:1.15;max-width:80%;}
+  #poster .cover-sub:empty{display:none;}
+  #poster .cover-contact{margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:14px;
+    font-size:28px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;line-height:1.2;}
+  #poster .cover-contact > div:empty{display:none;}
+  #poster .cover-contact:not(:has(div:not(:empty))){display:none;}
+  #poster .cover-web{color:var(--accent);}
+  #poster.layout-cover .inner,#poster.layout-cover .frame,#poster.layout-cover .band,
+  #poster.layout-cover .rental-topbar,#poster.layout-cover .rental-panel,#poster.layout-cover .logo{display:none;}
+  #poster.layout-cover .cover{display:flex;}
+
   /* ---------- Optional PNG logo (all layouts) ---------- */
   #poster .logo{position:absolute;top:var(--logo-top,56px);z-index:6;
     width:var(--logo-w,200px);height:auto;object-fit:contain;
@@ -421,25 +450,64 @@
           </div>
         </div>
 
+        <div class="space-y-4">
+          <div>
+            <span class="section-label">Cover / End Page</span>
+            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Branding slide — big centred logo, headline (Main Title), tagline (Subtitle) and contact details. Pairs well with a solid-colour background.</p>
+          </div>
+          <div class="space-y-1.5">
+            <span class="field-label">Vertical alignment</span>
+            <div id="coverAlign" class="flex gap-1"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="field-label" for="coverLogoSize">Logo size</label>
+              <span id="coverLogoDims" class="text-xs" style="color:var(--muted)">—</span>
+            </div>
+            <input type="range" id="coverLogoSize" min="120" max="760" value="360" class="w-full" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1.5">
+              <label class="field-label" for="covPhone">Contact phone</label>
+              <input class="input sm" id="covPhone" value="+598 99 123 456" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="field-label" for="covWebsite">Website</label>
+              <input class="input sm" id="covWebsite" value="meridianestates.com" />
+            </div>
+          </div>
+        </div>
+
         <hr style="border-color:var(--border)" />
 
         <div class="space-y-3">
-          <span class="section-label">Background Image</span>
-          <div id="presets" class="grid grid-cols-4 gap-2"></div>
-          <label class="block">
-            <span class="field-label">Upload your own</span>
-            <input type="file" id="upload" accept="image/*"
-              class="mt-1.5 block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
-          </label>
+          <div class="flex items-center justify-between">
+            <span class="section-label">Background</span>
+            <div id="bgMode" class="flex gap-1"></div>
+          </div>
+          <div id="bgImageControls" class="space-y-3">
+            <div id="presets" class="grid grid-cols-4 gap-2"></div>
+            <label class="block">
+              <span class="field-label">Upload your own</span>
+              <input type="file" id="upload" accept="image/*"
+                class="mt-1.5 block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
+            </label>
+          </div>
+          <div id="bgSolidControls" hidden class="flex items-center gap-2">
+            <input type="color" id="bgColor" value="#12161b" class="h-7 w-10 shrink-0 rounded border-0 bg-transparent" style="cursor:pointer" aria-label="Background colour" />
+            <span class="field-label">Solid colour</span>
+            <input type="text" id="bgColorHex" value="#12161b" class="input sm ml-auto" style="width:7.5rem;text-transform:uppercase" aria-label="Background hex" />
+          </div>
         </div>
 
         <div class="space-y-3">
-          <span class="section-label">Logo <span class="normal-case tracking-normal" style="color:var(--muted)">(PNG, all layouts)</span></span>
+          <span class="section-label">Logo <span class="normal-case tracking-normal" style="color:var(--muted)">(PNG / SVG, all layouts)</span></span>
           <div class="flex items-center gap-2">
             <input type="file" id="logoUpload" accept="image/png,image/svg+xml,image/*"
               class="block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
             <button type="button" id="logoClear" class="chip" style="padding:6px 10px" hidden>Clear</button>
           </div>
+          <input type="url" id="logoUrl" placeholder="…or paste an image URL" class="input sm" />
           <div id="logoControls" hidden class="space-y-3">
             <div class="space-y-1.5">
               <span class="field-label">Position</span>
@@ -493,6 +561,7 @@
       <div id="stageWrap" style="box-shadow:0 40px 90px -20px rgba(0,0,0,.7)">
         <div id="poster" class="layout-centered">
           <img class="bg" id="posterImg" alt="Property photograph" crossorigin="anonymous" />
+          <div class="solid-bg" id="p-solidbg"></div>
           <div class="overlay"></div>
           <div class="tint"></div>
           <div class="rental-grad"></div>
@@ -532,6 +601,16 @@
               <span class="r-cta-phone" id="p-r-phone"></span>
             </div>
           </div>
+          <div class="cover" id="p-cover">
+            <img class="cover-logo" id="p-cover-logo" alt="" crossorigin="anonymous" hidden />
+            <div class="cover-title" id="p-cover-title"></div>
+            <div class="cover-sub" id="p-cover-sub"></div>
+            <div class="cover-contact">
+              <div class="cover-phone" id="p-cover-phone"></div>
+              <div class="cover-web" id="p-cover-web"></div>
+            </div>
+          </div>
+
           <img class="logo" id="p-logo" alt="" crossorigin="anonymous" hidden />
         </div>
       </div>
@@ -561,7 +640,8 @@
     { cls:"layout-editorial", name:"Editorial", note:"Title centered on frame" },
     { cls:"layout-bar",       name:"Lower Bar", note:"Dark band, magazine cover" },
     { cls:"layout-split",     name:"Top & Bottom", note:"Header pinned, copy in lower half" },
-    { cls:"layout-rental",    name:"Rental Availability", note:"Agency bar + lower info panel" }
+    { cls:"layout-rental",    name:"Rental Availability", note:"Agency bar + lower info panel" },
+    { cls:"layout-cover",     name:"Cover / End Page", note:"Centred branding slide" }
   ];
   const fontPresets = [
     { key:"classic", name:"Classic Estate", note:"Cinzel · Parisienne",
@@ -595,7 +675,8 @@
     { name:"Gallery Muted",   note:"Quiet & editorial", format:"p45", layout:"layout-editorial", font:"modern",  accent:"champagne", tint:"rgba(60,54,48,.25)",   overlay:40, spec:"inline" },
     { name:"Blue Hour",       note:"Cool, structured",  format:"p45", layout:"layout-centered",  font:"couture", accent:"steel",     tint:"rgba(28,54,96,.32)",   overlay:52, spec:"columns" },
     { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" },
-    { name:"Rental Availability", note:"Agency bar + periods", format:"p45", layout:"layout-rental", font:"classic", accent:"brass", tint:"rgba(18,26,42,.20)", overlay:26, spec:"icons" }
+    { name:"Rental Availability", note:"Agency bar + periods", format:"p45", layout:"layout-rental", font:"classic", accent:"brass", tint:"rgba(18,26,42,.20)", overlay:26, spec:"icons" },
+    { name:"Cover / End Page", note:"Branding slide", format:"p45", layout:"layout-cover", font:"classic", accent:"brass", tint:"transparent", overlay:22, spec:"inline" }
   ];
 
   const $ = id => document.getElementById(id);
@@ -604,9 +685,10 @@
   let POSTER_W = 1080, POSTER_H = 1350;
 
   /* ---- simple text fields ---- */
-  [['header','p-header'],['badge','p-badge'],['title','p-title'],
-   ['subtitle','p-subtitle'],['date','p-date'],['price','p-price'],['plan','p-plan'],
-   ['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone']]
+  [['header','p-header'],['badge','p-badge'],['title','p-title'],['title','p-cover-title'],
+   ['subtitle','p-subtitle'],['subtitle','p-cover-sub'],['date','p-date'],['price','p-price'],['plan','p-plan'],
+   ['rType','p-r-type'],['rCta','p-r-cta'],['rPhone','p-r-phone'],
+   ['covPhone','p-cover-phone'],['covWebsite','p-cover-web']]
     .forEach(([id,t]) => {
       const el = $(id), out = $(t);
       if (!el || !out) return;
@@ -767,10 +849,43 @@
   });
   ovColorReset.addEventListener('click', () => poster.style.removeProperty('--ov-rgb'));
 
-  /* ---- optional PNG logo (all layouts) ---- */
-  const logoImg = $('p-logo'), logoUpload = $('logoUpload'), logoClear = $('logoClear');
+  /* ---- background mode (image / solid colour) ---- */
+  const bgModes = [{ key:'image', name:'Image' }, { key:'solid', name:'Solid' }];
+  let bgMode = 'image';
+  const bgModeEl = $('bgMode'), bgColorEl = $('bgColor'), bgColorHex = $('bgColorHex');
+  bgModes.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (i === 0 ? ' active' : '');
+    b.style.padding = '4px 12px';
+    b.textContent = m.name;
+    b.addEventListener('click', () => { bgMode = m.key; applyBgMode(); });
+    bgModeEl.appendChild(b);
+  });
+  function applyBgMode(){
+    [...bgModeEl.children].forEach((c, i) => c.classList.toggle('active', bgModes[i].key === bgMode));
+    const solid = bgMode === 'solid';
+    poster.classList.toggle('bg-solid', solid);
+    $('bgImageControls').hidden = solid;
+    $('bgSolidControls').hidden = !solid;
+    if (textThemeMode === 'auto') applyTextTheme();
+  }
+  function setBgColor(hex){
+    if (!/^#?[0-9a-f]{6}$/i.test(hex.trim())) return;
+    const h = hex.trim().replace(/^#?/, '#');
+    poster.style.setProperty('--bg-solid', h);
+    bgColorEl.value = h; bgColorHex.value = h.toUpperCase();
+  }
+  bgColorEl.addEventListener('input', () => setBgColor(bgColorEl.value));
+  bgColorHex.addEventListener('change', () => setBgColor(bgColorHex.value));
+  setBgColor(bgColorEl.value);
+
+  /* ---- optional logo — corner (all layouts) + hero (cover layout) ---- */
+  const logoImg = $('p-logo'), coverLogoImg = $('p-cover-logo');
+  const logoUpload = $('logoUpload'), logoUrl = $('logoUrl'), logoClear = $('logoClear');
   const logoControls = $('logoControls'), logoSize = $('logoSize'), logoTop = $('logoTop');
   const logoDims = $('logoDims'), logoTopVal = $('logoTopVal'), logoPosEl = $('logoPos');
+  const coverLogoSize = $('coverLogoSize'), coverLogoDims = $('coverLogoDims');
   const logoPositions = [{ key:'left', name:'Left' }, { key:'center', name:'Center' }, { key:'right', name:'Right' }];
   let logoPos = 'left', logoRatio = 1;
   logoPositions.forEach((p, i) => {
@@ -793,33 +908,62 @@
     logoTopVal.textContent = logoTop.value + 'px';
     logoDims.textContent = logoImg.getAttribute('src') ? (w + ' × ' + Math.round(w / logoRatio) + ' px') : '—';
   }
+  function applyCoverLogo(){
+    const w = +coverLogoSize.value;
+    poster.style.setProperty('--cover-logo-w', w + 'px');
+    coverLogoDims.textContent = coverLogoImg.getAttribute('src') ? (w + ' × ' + Math.round(w / logoRatio) + ' px') : '—';
+  }
+  function setLogo(src){
+    const probe = new Image();
+    probe.onload = () => {
+      logoRatio = (probe.naturalWidth / probe.naturalHeight) || 1;
+      [logoImg, coverLogoImg].forEach(el => { el.src = src; el.hidden = false; });
+      logoControls.hidden = false;
+      logoClear.hidden = false;
+      applyLogo();
+      applyCoverLogo();
+      fit();
+    };
+    probe.onerror = () => alert('Could not load that logo image. For a URL, the host must allow cross-origin use — otherwise upload the file.');
+    probe.crossOrigin = 'anonymous';
+    probe.src = src;
+  }
+  function clearLogo(){
+    [logoImg, coverLogoImg].forEach(el => { el.removeAttribute('src'); el.hidden = true; });
+    logoControls.hidden = true;
+    logoClear.hidden = true;
+    logoUpload.value = ''; logoUrl.value = '';
+    applyCoverLogo();
+    fit();
+  }
   logoUpload.addEventListener('change', e => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
     const r = new FileReader();
-    r.onload = () => {
-      logoImg.onload = () => {
-        logoRatio = (logoImg.naturalWidth / logoImg.naturalHeight) || 1;
-        logoImg.hidden = false;
-        logoControls.hidden = false;
-        logoClear.hidden = false;
-        applyLogo();
-        fit();
-      };
-      logoImg.src = r.result;
-    };
+    r.onload = () => setLogo(r.result);
     r.readAsDataURL(f);
   });
-  logoClear.addEventListener('click', () => {
-    logoImg.removeAttribute('src');
-    logoImg.hidden = true;
-    logoControls.hidden = true;
-    logoClear.hidden = true;
-    logoUpload.value = '';
-    fit();
-  });
+  logoUrl.addEventListener('change', () => { if (logoUrl.value.trim()) setLogo(logoUrl.value.trim()); });
+  logoClear.addEventListener('click', clearLogo);
   logoSize.addEventListener('input', applyLogo);
   logoTop.addEventListener('input', applyLogo);
+  coverLogoSize.addEventListener('input', applyCoverLogo);
+
+  /* ---- cover / end page: vertical alignment ---- */
+  const coverAligns = [{ key:'flex-start', name:'Top' }, { key:'center', name:'Center' }, { key:'flex-end', name:'Bottom' }];
+  const coverAlignEl = $('coverAlign');
+  coverAligns.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (i === 1 ? ' active' : '');
+    b.style.padding = '4px 12px';
+    b.textContent = a.name;
+    b.addEventListener('click', () => {
+      poster.style.setProperty('--cover-align', a.key);
+      [...coverAlignEl.children].forEach((c, j) => c.classList.toggle('active', j === i));
+    });
+    coverAlignEl.appendChild(b);
+  });
 
   /* ---- text contrast theme (light / dark / auto) ---- */
   const textThemes = [{ key:'light', name:'Light' }, { key:'dark', name:'Dark' }, { key:'auto', name:'Auto' }];
@@ -1125,6 +1269,8 @@
   renderPeriods();
   renderAmenities();
   applyTextTheme();
+  applyBgMode();
+  applyCoverLogo();
   fit();
 })();
 </script>
