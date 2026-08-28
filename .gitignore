@@ -1,9 +1,3 @@
-# Third-party reference graphics (not ours to redistribute) — keep the notes, not the images
-inspiration/*.jpg
-inspiration/*.jpeg
-inspiration/*.png
-inspiration/*.webp
-
 # OS / editor
 .DS_Store
 Thumbs.db
