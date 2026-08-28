@@ -38,6 +38,13 @@
   }
   .chip:hover{border-color:var(--muted);}
   .chip.active{border-color:var(--brass);background:rgba(198,161,91,.12);}
+
+  .vtab{border:1px solid var(--border);background:var(--panel-2);color:var(--muted);
+    border-radius:6px;padding:7px 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:600;transition:background .15s,color .15s,border-color .15s;flex:1;white-space:nowrap;}
+  .vtab:hover{color:var(--text);}
+  .vtab.active{background:var(--brass);color:#1a1408;border-color:var(--brass);}
+  @media (min-width:768px){.vtab{flex:0 0 auto;}}
   .chip .chip-sub{display:block;font-size:10px;letter-spacing:.06em;color:var(--muted);margin-top:2px;}
 
   .dot{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);transition:transform .1s,box-shadow .15s;}
@@ -416,29 +423,29 @@
 
         <div class="space-y-4">
           <div>
-            <span class="section-label">Rental Availability</span>
-            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Fields for the <em>Rental Availability</em> layout — two-line header, property type, title, period table, amenities and a contact call-to-action. Empty amenity, period or CTA fields collapse automatically.</p>
+            <span class="section-label" id="offerSectionLabel">Rental Availability</span>
+            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)" id="offerSectionNote">Fields for the availability layout — two-line header, type, title, period table, features and a contact call-to-action. Empty feature, period or CTA fields collapse automatically.</p>
           </div>
           <div class="space-y-1.5">
-            <label class="field-label" for="rSeason">Top line 1 — season &amp; type</label>
+            <label class="field-label" for="rSeason" id="lbl-rSeason">Top line 1 — season &amp; type</label>
             <input class="input sm" id="rSeason" value="Temporada 2026 · Alquiler" />
           </div>
           <div class="space-y-1.5">
-            <label class="field-label" for="rAgency">Top line 2 — agency</label>
-            <input class="input sm" id="rAgency" value="Ofrecido por Meridian Estates" placeholder="Ofrecido por … (defaults to Header)" />
+            <label class="field-label" for="rAgency" id="lbl-rAgency">Top line 2 — agency</label>
+            <input class="input sm" id="rAgency" value="Ofrecido por Meridian Estates" placeholder="defaults to Header" />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div class="space-y-1.5">
-              <label class="field-label" for="rType">Property type</label>
+              <label class="field-label" for="rType" id="lbl-rType">Property type</label>
               <input class="input sm" id="rType" value="Villa" placeholder="Casa / Apartamento / Condo" />
             </div>
             <div class="space-y-1.5">
               <label class="field-label" for="rZona">Main title</label>
-              <input class="input sm" id="rZona" placeholder="location / name — defaults to Main Title" />
+              <input class="input sm" id="rZona" placeholder="defaults to Main Title" />
             </div>
           </div>
           <div class="space-y-1.5">
-            <span class="field-label">Availability periods</span>
+            <span class="field-label" id="lbl-periods">Availability periods</span>
             <div class="grid grid-cols-2 gap-2">
               <input class="input sm" id="rP1" value="Dec 15–31" aria-label="Period column 1 row 1" />
               <input class="input sm" id="rP2" value="Jan 15–31" aria-label="Period column 2 row 1" />
@@ -447,7 +454,7 @@
             </div>
           </div>
           <div class="space-y-1.5">
-            <span class="field-label">Amenities <span class="normal-case tracking-normal">(bed · bath · pool · garage)</span></span>
+            <span class="field-label"><span id="lbl-features">Amenities</span> <span class="normal-case tracking-normal" id="lbl-featuresHint">(bed · bath · pool · garage)</span></span>
             <div class="grid grid-cols-2 gap-2">
               <input class="input sm" id="rA1" value="5 Bed" aria-label="Amenity 1" />
               <input class="input sm" id="rA2" value="6 Bath" aria-label="Amenity 2" />
@@ -723,14 +730,83 @@
     '<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 5 6.2 5 8.7A5 5 0 0 1 7 11.7C7 9.2 9 6.6 12 3z"/></svg>',
     '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'
   ];
-  // Design presets distilled from luxury-listing references (composition & treatment only).
-  const designPresets = [
+  // Design presets distilled from listing references (composition & treatment only).
+  const realEstatePresets = [
     { name:"Twilight Warmth", note:"Warm feed post",   format:"p45", layout:"layout-centered",  font:"classic", accent:"brass",     tint:"rgba(120,72,28,.28)",  overlay:58, spec:"icons" },
     { name:"Gallery Muted",   note:"Quiet & editorial", format:"p45", layout:"layout-editorial", font:"modern",  accent:"champagne", tint:"rgba(60,54,48,.25)",   overlay:40, spec:"inline" },
     { name:"Blue Hour",       note:"Cool, structured",  format:"p45", layout:"layout-centered",  font:"couture", accent:"steel",     tint:"rgba(28,54,96,.32)",   overlay:52, spec:"columns" },
     { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" },
     { name:"Rental Availability", note:"Agency bar + periods", format:"p45", layout:"layout-rental", font:"classic", accent:"brass", tint:"rgba(18,26,42,.20)", overlay:26, spec:"icons" },
     { name:"Cover / End Page", note:"Branding slide", format:"p45", layout:"layout-cover", font:"classic", accent:"brass", tint:"transparent", overlay:22, spec:"inline" }
+  ];
+  const autoPresets = [
+    { name:"Showroom",        note:"Feature vehicle",   format:"p45", layout:"layout-centered",  font:"modern",  accent:"steel", tint:"rgba(20,28,40,.32)", overlay:56, spec:"icons" },
+    { name:"Financiación",    note:"Terms + CTA",       format:"p45", layout:"layout-rental",    font:"modern",  accent:"steel", tint:"rgba(16,22,32,.22)", overlay:26, spec:"icons" },
+    { name:"Recién Ingresado",note:"Magazine cover",    format:"p45", layout:"layout-bar",       font:"couture", accent:"steel", tint:"rgba(10,14,20,.30)", overlay:52, spec:"columns" },
+    { name:"Historia 9:16",   note:"Stories",           format:"st",  layout:"layout-centered",  font:"modern",  accent:"steel", tint:"rgba(18,26,38,.30)", overlay:58, spec:"columns" },
+    { name:"Cover / Contacto",note:"Branding slide",    format:"p45", layout:"layout-cover",     font:"modern",  accent:"steel", tint:"transparent",        overlay:20, spec:"inline" }
+  ];
+  const hotelPresets = [
+    { name:"Escapada",        note:"Hero stay",         format:"p45", layout:"layout-centered",  font:"coastal", accent:"rose", tint:"rgba(90,52,74,.24)", overlay:52, spec:"icons" },
+    { name:"Tarifa Temporada",note:"Dates + rate",      format:"p45", layout:"layout-rental",    font:"coastal", accent:"rose", tint:"rgba(60,40,54,.20)", overlay:24, spec:"icons" },
+    { name:"Editorial",       note:"Title on frame",    format:"p45", layout:"layout-editorial", font:"couture", accent:"champagne", tint:"rgba(54,46,42,.24)", overlay:44, spec:"inline" },
+    { name:"Historia 9:16",   note:"Stories",           format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose", tint:"rgba(70,44,60,.26)", overlay:58, spec:"columns" },
+    { name:"Cover / Reservas",note:"Branding slide",    format:"p45", layout:"layout-cover",     font:"coastal", accent:"rose", tint:"transparent",        overlay:20, spec:"inline" }
+  ];
+  const iconSets = {
+    realestate: [
+      '<svg viewBox="0 0 24 24"><path d="M3 18v-5h18v5M3 13V8m0 5h18M6 13v-2.5A1.5 1.5 0 0 1 7.5 9H11v4M21 13V9"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 5 6.2 5 8.7A5 5 0 0 1 7 11.7C7 9.2 9 6.6 12 3z"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M2 17c1.6 0 1.6-1.3 3.2-1.3S6.8 17 8.4 17s1.6-1.3 3.2-1.3S13.2 17 14.8 17s1.6-1.3 3.2-1.3S19.6 17 21.2 17M2 12.5c1.6 0 1.6-1.3 3.2-1.3S6.8 12.5 8.4 12.5M7 15V6a2 2 0 0 1 4 0M14 15V6a2 2 0 0 1 4 0"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M4 13l1.6-4.5A2 2 0 0 1 7.5 7h9a2 2 0 0 1 1.9 1.5L20 13M4 13h16v5h-3v-2H7v2H4zM7.5 15.5h.01M16.5 15.5h.01"/></svg>'
+    ],
+    autos: [
+      '<svg viewBox="0 0 24 24"><path d="M6 19v-3h9v3M7 16l-1.2-6A2 2 0 0 1 7.8 8H10l1 5h4M17 16v-2a2 2 0 0 0-2-2"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M5 21V6a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v15M3 21h13M14 10h2.5a1.5 1.5 0 0 1 1.5 1.5V16a2 2 0 0 0 4 0V8l-3-3"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M4.9 19a9 9 0 1 1 14.2 0M12 14l3.5-3.5"/><circle cx="12" cy="14" r="1.4"/></svg>',
+      '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>'
+    ],
+    hotel: [
+      '<svg viewBox="0 0 24 24"><path d="M3 18v-5h18v5M3 13V8m0 5h18M6 13v-2.5A1.5 1.5 0 0 1 7.5 9H11v4M21 13V9"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0M8 15.5a6 6 0 0 1 8 0M12 19h.01"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M2 17c1.6 0 1.6-1.3 3.2-1.3S6.8 17 8.4 17s1.6-1.3 3.2-1.3S13.2 17 14.8 17s1.6-1.3 3.2-1.3S19.6 17 21.2 17M2 12.5c1.6 0 1.6-1.3 3.2-1.3S6.8 12.5 8.4 12.5M7 15V6a2 2 0 0 1 4 0M14 15V6a2 2 0 0 1 4 0"/></svg>',
+      '<svg viewBox="0 0 24 24"><path d="M4 8h13v5a5 5 0 0 1-10 0V8M17 9h2a2 2 0 0 1 0 4h-2M7 3v2M11 3v2"/></svg>'
+    ]
+  };
+  const verticals = [
+    { id:'realestate', name:'Inmobiliarias', accent:'brass', presets: realEstatePresets, icons: iconSets.realestate,
+      labels:{ offer:'Rental Availability', note:'Two-line header, property type, title, availability periods, amenities and a contact CTA. Empty fields collapse automatically.',
+        rSeason:'Top line 1 — season & type', rAgency:'Top line 2 — agency', rType:'Property type', rTypePh:'Casa / Apartamento / Condo',
+        periods:'Availability periods', availHead:'Disponibilidad · Availability', features:'Amenities', featuresHint:'bed · bath · pool · garage' },
+      seed:{ header:'Presented By Meridian Estates', title:'The Hillcrest Residence', subtitle:'Beverly Hills, California',
+        price:'$4,750,000', plan:'20% Down · 36-Month Plan',
+        specs:[['Bedrooms','5 Bed'],['Bathrooms','6 Bath'],['Interior','6,200 Sq Ft']],
+        rSeason:'Temporada 2026 · Alquiler', rAgency:'Ofrecido por Meridian Estates', rType:'Villa', rZona:'',
+        rP:['Dec 15–31','Jan 15–31','Jan 1–15','Feb 1–15'], rA:['5 Bed','6 Bath','Pool','3 Garage'],
+        rCta:'Consúltenos', rPhone:'+598 99 123 456', rCtaWeb:'Visite Nuestro Sitio Web',
+        rListingUrl:'https://meridianestates.com/playa-mansa', covPhone:'+598 99 123 456', covWebsite:'meridianestates.com' } },
+    { id:'autos', name:'Autos Usados', accent:'steel', presets: autoPresets, icons: iconSets.autos,
+      labels:{ offer:'Vehicle Offer', note:'Two-line header, body/fuel type, model, financing terms, key specs and a contact CTA. Empty fields collapse automatically.',
+        rSeason:'Top line 1 — campaign', rAgency:'Top line 2 — dealership', rType:'Body / fuel type', rTypePh:'Sedán / SUV / Pickup',
+        periods:'Financing / offer terms', availHead:'Financiación · Financing', features:'Key specs', featuresHint:'seats · fuel · engine · year' },
+      seed:{ header:'Ofrecido por AutoNorte', title:'Toyota Hilux SRV 4×4', subtitle:'2021 · 48.000 km · Único dueño',
+        price:'USD 34.900', plan:'Financiación 60 cuotas · Entrega 30%',
+        specs:[['Año','2021'],['Kilómetros','48.000 km'],['Motor','2.8 TDI']],
+        rSeason:'Usados Certificados 2026', rAgency:'Ofrecido por AutoNorte', rType:'Pickup · Diésel', rZona:'',
+        rP:['Entrega 30%','60 cuotas','Tasa fija','Gestoría incluida'], rA:['5 Plazas','Diésel','2.8 TDI','2021'],
+        rCta:'Consúltenos', rPhone:'+598 99 555 222', rCtaWeb:'Ver Ficha Completa',
+        rListingUrl:'https://autonorte.com/hilux-srv', covPhone:'+598 99 555 222', covWebsite:'autonorte.com' } },
+    { id:'hotel', name:'Hospitalidad', accent:'rose', presets: hotelPresets, icons: iconSets.hotel,
+      labels:{ offer:'Stay Availability', note:'Two-line header, room/venue type, title, season dates, amenities and a booking CTA. Empty fields collapse automatically.',
+        rSeason:'Top line 1 — season', rAgency:'Top line 2 — property', rType:'Room / venue type', rTypePh:'Suite / Cabaña / Salón',
+        periods:'Season & dates', availHead:'Temporada · Season', features:'Amenities', featuresHint:'guests · wifi · pool · breakfast' },
+      seed:{ header:'Ofrecido por Casa del Faro', title:'Suite Vista al Mar', subtitle:'La Barra · Punta del Este',
+        price:'USD 320 / noche', plan:'Mín. 2 noches · Desayuno incluido',
+        specs:[['Huéspedes','2–4'],['Dormitorios','2'],['Vista','Al mar']],
+        rSeason:'Temporada 2026 · Alojamiento', rAgency:'Ofrecido por Casa del Faro', rType:'Suite · Frente al mar', rZona:'',
+        rP:['15–31 Dic','1–15 Ene','15–31 Ene','1–15 Feb'], rA:['2–4 Huésp.','Wi-Fi','Piscina','Desayuno'],
+        rCta:'Reservá Ahora', rPhone:'+598 99 777 888', rCtaWeb:'Ver Disponibilidad',
+        rListingUrl:'https://casadelfaro.com/suite-vista-mar', covPhone:'+598 99 777 888', covWebsite:'casadelfaro.com' } }
   ];
 
   const $ = id => document.getElementById(id);
@@ -844,12 +920,7 @@
   syncSubLen();
 
   /* ---- rental: availability periods + amenity icons ---- */
-  const amenityIcons = [
-    '<svg viewBox="0 0 24 24"><path d="M3 18v-5h18v5M3 13V8m0 5h18M6 13v-2.5A1.5 1.5 0 0 1 7.5 9H11v4M21 13V9"/></svg>',
-    '<svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 5 6.2 5 8.7A5 5 0 0 1 7 11.7C7 9.2 9 6.6 12 3z"/></svg>',
-    '<svg viewBox="0 0 24 24"><path d="M2 17c1.6 0 1.6-1.3 3.2-1.3S6.8 17 8.4 17s1.6-1.3 3.2-1.3S13.2 17 14.8 17s1.6-1.3 3.2-1.3S19.6 17 21.2 17M2 12.5c1.6 0 1.6-1.3 3.2-1.3S6.8 12.5 8.4 12.5M7 15V6a2 2 0 0 1 4 0M14 15V6a2 2 0 0 1 4 0"/></svg>',
-    '<svg viewBox="0 0 24 24"><path d="M4 13l1.6-4.5A2 2 0 0 1 7.5 7h9a2 2 0 0 1 1.9 1.5L20 13M4 13h16v5h-3v-2H7v2H4zM7.5 15.5h.01M16.5 15.5h.01"/></svg>'
-  ];
+  let amenityIconSet = iconSets.realestate;
   function renderPeriods(){
     const wrap = $('p-r-periods');
     const vals = ['rP1','rP2','rP3','rP4'].map(id => $(id).value.trim());
@@ -860,7 +931,7 @@
     const wrap = $('p-r-amenities');
     const vals = ['rA1','rA2','rA3','rA4'].map(id => $(id).value.trim());
     wrap.innerHTML = vals.map((v, i) => v
-      ? '<div class="r-amenity">' + amenityIcons[i] + '<span>' + esc(v) + '</span></div>' : '').join('');
+      ? '<div class="r-amenity">' + (amenityIconSet[i] || '') + '<span>' + esc(v) + '</span></div>' : '').join('');
   }
   ['rP1','rP2','rP3','rP4'].forEach(id => $(id).addEventListener('input', renderPeriods));
   ['rA1','rA2','rA3','rA4'].forEach(id => $(id).addEventListener('input', renderAmenities));
@@ -908,6 +979,15 @@
     specData[i].v = val;
     const input = specRows.querySelector('input[data-si="'+i+'"][data-sk="v"]');
     if (input) input.value = val;
+    renderSpecs();
+  }
+  function setSpecKV(i, k, val){
+    if (i < 0 || i >= specData.length) return;
+    specData[i].k = k; specData[i].v = val;
+    const ki = specRows.querySelector('input[data-si="'+i+'"][data-sk="k"]');
+    const vi = specRows.querySelector('input[data-si="'+i+'"][data-sk="v"]');
+    if (ki) ki.value = k;
+    if (vi) vi.value = val;
     renderSpecs();
   }
 
@@ -1199,7 +1279,51 @@
     setSpecStyle(dp.spec);
     fit();
   }
-  const designGroup = chipGroup($('designPresets'), designPresets, applyDesignPreset);
+  let designGroup = chipGroup($('designPresets'), realEstatePresets, applyDesignPreset);
+
+  /* ---- vertical tabs (Inmobiliarias / Autos Usados / Hospitalidad) ---- */
+  const tabsEl = $('verticalTabs');
+  function txt(id, s){ const el = $(id); if (el) el.textContent = s; }
+  function applyVertical(v){
+    [...tabsEl.children].forEach((c, i) => c.classList.toggle('active', verticals[i].id === v.id));
+    const L = v.labels;
+    txt('offerSectionLabel', L.offer);
+    txt('offerSectionNote', L.note);
+    txt('lbl-rSeason', L.rSeason);
+    txt('lbl-rAgency', L.rAgency);
+    txt('lbl-rType', L.rType);
+    $('rType').placeholder = L.rTypePh;
+    txt('lbl-periods', L.periods);
+    txt('p-r-availhead', L.availHead);
+    txt('lbl-features', L.features);
+    txt('lbl-featuresHint', '(' + L.featuresHint + ')');
+    amenityIconSet = v.icons;
+
+    const s = v.seed;
+    setField('header', s.header); setField('title', s.title); setField('subtitle', s.subtitle);
+    setField('price', s.price); setField('plan', s.plan);
+    s.specs.forEach((sp, i) => { setSpecKV(i, sp[0], sp[1]); });
+    setField('rSeason', s.rSeason); setField('rAgency', s.rAgency);
+    setField('rType', s.rType); setField('rZona', s.rZona);
+    ['rP1','rP2','rP3','rP4'].forEach((id, i) => setField(id, s.rP[i]));
+    ['rA1','rA2','rA3','rA4'].forEach((id, i) => setField(id, s.rA[i]));
+    setField('rCta', s.rCta); setField('rPhone', s.rPhone); setField('rCtaWeb', s.rCtaWeb);
+    setField('rListingUrl', s.rListingUrl);
+    setField('covPhone', s.covPhone); setField('covWebsite', s.covWebsite);
+    renderPeriods(); renderAmenities(); renderCta(); renderSpecs(); syncTopbar(); syncZona();
+
+    $('designPresets').innerHTML = '';
+    designGroup = chipGroup($('designPresets'), v.presets, applyDesignPreset);
+    applyDesignPreset(v.presets[0]);
+  }
+  verticals.forEach((v, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'vtab' + (i === 0 ? ' active' : '');
+    b.textContent = v.name;
+    b.addEventListener('click', () => applyVertical(v));
+    tabsEl.appendChild(b);
+  });
   function applyFont(fp){
     poster.style.setProperty('--font-display', fp.display);
     poster.style.setProperty('--font-script', fp.script);
@@ -1526,14 +1650,10 @@
   });
 
   /* ---- init ---- */
-  applyDesignPreset(designPresets[0]);
-  renderSpecs();
-  renderPeriods();
-  renderAmenities();
-  renderCta();
   applyTextTheme();
   applyBgMode();
   applyCoverLogo();
+  applyVertical(verticals[0]);
   fit();
 })();
 </script>
