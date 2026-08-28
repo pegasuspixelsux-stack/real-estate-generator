@@ -190,7 +190,8 @@
 
   #poster .r-zona{font-family:var(--font-display);font-weight:700;font-size:64px;
     letter-spacing:.04em;text-transform:uppercase;line-height:1.04;text-shadow:var(--glow);}
-  #poster .r-type{font-size:25px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-top:14px;}
+  #poster .r-type{font-size:25px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+  #poster .r-type:empty{display:none;}
 
   #poster .r-avail{border-top:1px solid var(--fg-rule);border-bottom:1px solid var(--fg-rule);padding:26px 0;}
   #poster .r-avail-head{font-size:19px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--fg-soft);margin-bottom:20px;}
@@ -448,8 +449,8 @@
           <div class="rental-topbar" id="p-r-agency"></div>
           <div class="rental-panel">
             <div>
-              <div class="r-zona" id="p-r-zona"></div>
               <div class="r-type" id="p-r-type"></div>
+              <div class="r-zona" id="p-r-zona"></div>
             </div>
             <div class="r-avail">
               <div class="r-avail-head" id="p-r-availhead">Disponibilidad · Availability</div>
