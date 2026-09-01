@@ -1526,7 +1526,8 @@
   // iOS Safari (iPhone + iPad) ignores <a download> and won't open large data: URIs,
   // so a plain triggerDownload never saves the file. Detect it and route around it.
   const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    || /[?&]iossim\b/.test(location.search);
 
   function showSaveOverlay(src){
     const ov = document.createElement('div');
@@ -1570,6 +1571,11 @@
 
   // full poster, single clean frame (Ken Burns removed for the capture)
   async function makePng(){
+    // iOS Safari's html-to-image rasterises the SVG before the embedded background
+    // <img> decodes, so the photo drops out while the text layer renders. Composite
+    // the photo straight onto a canvas (same path the video export uses) and let
+    // html-to-image handle only the transparent text/gradient/frame overlay.
+    if (IS_IOS) return compositePng();
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
     const fontEmbedCSS = await getFontCss();
     const kb = img.classList.contains('ken-burns-active');
@@ -1582,6 +1588,24 @@
         style: { transform: 'scale(1)', transformOrigin: 'top left' }
       });
     } finally { if (kb) img.classList.add('ken-burns-active'); }
+  }
+
+  async function compositePng(){
+    const overlay = await loadImg(await makeOverlayPng());
+    const scale = 2, cw = POSTER_W * scale, ch = POSTER_H * scale;
+    const cv = document.createElement('canvas');
+    cv.width = cw; cv.height = ch;
+    const ctx = cv.getContext('2d');
+    if (poster.classList.contains('bg-solid')){
+      ctx.fillStyle = (getComputedStyle(poster).getPropertyValue('--bg-solid') || '#12161b').trim();
+      ctx.fillRect(0, 0, cw, ch);
+    } else {
+      const src = img.getAttribute('src');
+      try { if (src) drawCover(ctx, await loadImg(src), cw, ch, 1, 0, 0); }
+      catch (_) { ctx.fillStyle = '#0b0d10'; ctx.fillRect(0, 0, cw, ch); }
+    }
+    ctx.drawImage(overlay, 0, 0, cw, ch);
+    return cv.toDataURL('image/png');
   }
 
   // foreground only (overlays + gradient + frame + text), transparent where the photo shows
