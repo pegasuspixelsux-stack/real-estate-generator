@@ -390,10 +390,10 @@
     </div>
   </header>
 
-  <div class="flex min-h-0 flex-1">
+  <div class="flex min-h-0 flex-1 flex-col md:flex-row">
 
     <!-- Left: controls -->
-    <aside class="w-full max-w-[400px] shrink-0 overflow-y-auto border-r p-6" style="border-color:var(--border);background:var(--panel)">
+    <aside class="order-2 w-full min-h-0 flex-1 overflow-y-auto border-t p-6 md:order-none md:max-w-[400px] md:flex-none md:shrink-0 md:border-t-0 md:border-r" style="border-color:var(--border);background:var(--panel)">
       <form id="form" class="space-y-6" autocomplete="off">
 
         <div class="space-y-3">
@@ -674,7 +674,7 @@
     </aside>
 
     <!-- Right: live preview -->
-    <main id="previewCol" class="relative flex min-w-0 flex-1 items-center justify-center overflow-hidden p-4"
+    <main id="previewCol" class="relative order-1 flex h-[48vh] min-w-0 shrink-0 items-center justify-center overflow-hidden p-4 md:order-none md:h-auto md:flex-1"
       style="background:radial-gradient(circle at 50% 30%, #1a1d22 0%, #0d0f12 70%)">
       <a id="posterLink" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;box-shadow:0 40px 90px -20px rgba(0,0,0,.7)">
       <div id="stageWrap">
@@ -1523,6 +1523,51 @@
     a.href = href; a.download = name; a.click();
   }
 
+  // iOS Safari (iPhone + iPad) ignores <a download> and won't open large data: URIs,
+  // so a plain triggerDownload never saves the file. Detect it and route around it.
+  const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  function showSaveOverlay(src){
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(8,10,14,.95);'
+      + 'display:flex;flex-direction:column;align-items:center;justify-content:center;'
+      + 'gap:16px;padding:20px;overflow:auto;-webkit-overflow-scrolling:touch';
+    const p = document.createElement('p');
+    p.textContent = 'Mantené presionada la imagen y elegí “Guardar en Fotos”.';
+    p.style.cssText = 'margin:0;color:#e7e3da;font:500 14px/1.45 system-ui,-apple-system,sans-serif;'
+      + 'text-align:center;letter-spacing:.02em;max-width:340px';
+    const im = new Image();
+    im.src = src;
+    im.style.cssText = 'max-width:100%;max-height:76vh;height:auto;border-radius:6px;'
+      + 'box-shadow:0 20px 60px rgba(0,0,0,.6)';
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.textContent = 'Cerrar';
+    close.style.cssText = 'background:#c6a15b;color:#1a1408;font:600 13px system-ui,sans-serif;'
+      + 'border:0;border-radius:6px;padding:10px 24px;text-transform:uppercase;letter-spacing:.06em';
+    const done = () => ov.remove();
+    close.addEventListener('click', done);
+    ov.addEventListener('click', e => { if (e.target === ov) done(); });
+    ov.append(p, im, close);
+    document.body.appendChild(ov);
+  }
+
+  // desktop → real download; iOS → native share sheet, then a long-press-to-save fallback
+  async function saveImage(dataUrl, name){
+    if (!IS_IOS){ triggerDownload(dataUrl, name); return; }
+    let file = null;
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      file = new File([blob], name, { type: 'image/png' });
+    } catch (_) { /* fall through to overlay */ }
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })){
+      try { await navigator.share({ files: [file], title: name }); return; }
+      catch (err){ if (err && err.name === 'AbortError') return; }  // user dismissed the sheet
+    }
+    showSaveOverlay(dataUrl);
+  }
+
   // full poster, single clean frame (Ken Burns removed for the capture)
   async function makePng(){
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
@@ -1600,7 +1645,7 @@
   /* ---- PNG (static) ---- */
   const btn = $('downloadBtn');
   btn.addEventListener('click', () => withBusy(btn, 'Rendering…', async () => {
-    triggerDownload(await makePng(), 'estate-' + slugName() + '-' + POSTER_W + 'x' + POSTER_H + '.png');
+    await saveImage(await makePng(), 'estate-' + slugName() + '-' + POSTER_W + 'x' + POSTER_H + '.png');
   }));
 
   /* ---- Video (Ken Burns) ---- */
