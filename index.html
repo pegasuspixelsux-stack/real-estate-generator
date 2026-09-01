@@ -375,7 +375,7 @@
 </head>
 <body class="antialiased">
 
-<div class="flex h-full flex-col">
+<div class="flex min-h-screen flex-col md:h-full md:min-h-0">
 
   <header class="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3" style="border-color:var(--border)">
     <div class="flex items-baseline gap-3">
@@ -383,17 +383,17 @@
       <span class="field-label hidden md:block">Social Graphic Designer · <span id="dimLabel">1080 × 1350</span></span>
     </div>
     <div id="verticalTabs" class="order-3 flex w-full gap-1 md:order-none md:w-auto"></div>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center justify-end gap-2">
       <button id="embedBtn" class="btn-primary" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border)" hidden>Copy Embed HTML</button>
       <button id="videoBtn" class="btn-primary" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border)">Exportar Video</button>
       <button id="downloadBtn" class="btn-primary">Exportar PNG</button>
     </div>
   </header>
 
-  <div class="flex min-h-0 flex-1 flex-col md:flex-row">
+  <div class="flex flex-col md:min-h-0 md:flex-1 md:flex-row">
 
     <!-- Left: controls -->
-    <aside class="order-2 w-full min-h-0 flex-1 overflow-y-auto border-t p-6 md:order-none md:max-w-[400px] md:flex-none md:shrink-0 md:border-t-0 md:border-r" style="border-color:var(--border);background:var(--panel)">
+    <aside class="order-2 w-full border-t p-6 md:order-none md:min-h-0 md:max-w-[400px] md:flex-none md:shrink-0 md:overflow-y-auto md:border-t-0 md:border-r" style="border-color:var(--border);background:var(--panel)">
       <form id="form" class="space-y-6" autocomplete="off">
 
         <div class="space-y-3">
@@ -674,7 +674,7 @@
     </aside>
 
     <!-- Right: live preview -->
-    <main id="previewCol" class="relative order-1 flex h-[48vh] min-w-0 shrink-0 items-center justify-center overflow-hidden p-4 md:order-none md:h-auto md:flex-1"
+    <main id="previewCol" class="relative order-1 flex h-[62vh] min-w-0 shrink-0 items-center justify-center overflow-hidden p-4 md:order-none md:h-auto md:flex-1"
       style="background:radial-gradient(circle at 50% 30%, #1a1d22 0%, #0d0f12 70%)">
       <a id="posterLink" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;box-shadow:0 40px 90px -20px rgba(0,0,0,.7)">
       <div id="stageWrap">
