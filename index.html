@@ -302,7 +302,7 @@
   /* branding eyebrow */
   #poster .sun-eyebrow{display:flex;align-items:center;justify-content:center;gap:24px;
     font-weight:400;font-size:22px;letter-spacing:.46em;text-indent:.46em;
-    text-transform:uppercase;color:var(--accent);}
+    text-transform:uppercase;color:var(--fg);}
   #poster .sun-eyebrow:empty{display:none;}
   #poster .sun-eyebrow::before,#poster .sun-eyebrow::after{content:"";flex:none;height:1px;width:44px;background:var(--fg-line);}
 
@@ -314,12 +314,12 @@
     text-transform:uppercase;color:var(--fg-soft);}
 
   /* headline + descriptive line */
-  #poster .sun-title{font-family:"Cormorant Garamond",serif;font-weight:400;white-space:nowrap;
-    font-size:calc(var(--title-size) * 1.0);line-height:1.04;letter-spacing:.05em;
+  #poster .sun-title{font-family:"Cormorant Garamond",serif;font-weight:400;
+    font-size:calc(var(--title-size) * 2.0);line-height:1.0;letter-spacing:.03em;
     text-transform:uppercase;text-shadow:var(--glow);margin-top:34px;}
   #poster .sun-title:empty{display:none;}
   #poster .sun-sub{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:33px;
-    line-height:1.3;letter-spacing:.02em;color:var(--fg-soft);margin-top:22px;max-width:78%;}
+    line-height:1.3;letter-spacing:.02em;color:var(--accent);margin-top:22px;max-width:78%;}
   #poster .sun-sub:empty{display:none;}
 
   /* specs row */
