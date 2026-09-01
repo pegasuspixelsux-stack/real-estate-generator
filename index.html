@@ -285,6 +285,73 @@
   #poster.layout-cover .rental-topbar,#poster.layout-cover .rental-panel,#poster.layout-cover .logo{display:none;}
   #poster.layout-cover .cover{display:flex;}
 
+  /* ---------- Sunset Living / Editorial layout ---------- */
+  #poster .sunset{position:absolute;inset:0;display:none;flex-direction:column;
+    align-items:center;text-align:center;justify-content:center;
+    padding:var(--pad-y) var(--pad-x);color:var(--fg);font-family:var(--font-body);}
+
+  /* branding eyebrow */
+  #poster .sun-eyebrow{display:flex;align-items:center;justify-content:center;gap:22px;
+    font-weight:500;font-size:19px;letter-spacing:.42em;text-indent:.42em;
+    text-transform:uppercase;color:var(--accent);}
+  #poster .sun-eyebrow:empty{display:none;}
+  #poster .sun-eyebrow::before,#poster .sun-eyebrow::after{content:"";height:1px;width:54px;background:var(--fg-line);}
+
+  /* season tag + location/type metadata */
+  #poster .sun-meta{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:20px;}
+  #poster .sun-meta:empty{display:none;}
+  #poster .sun-season{font-weight:600;font-size:22px;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;}
+  #poster .sun-place{font-weight:400;font-size:18px;letter-spacing:.22em;text-indent:.22em;
+    text-transform:uppercase;color:var(--fg-soft);}
+
+  /* headline + descriptive line */
+  #poster .sun-title{font-family:var(--font-display);font-weight:600;
+    font-size:calc(var(--title-size) * 1.02);line-height:1.05;letter-spacing:.05em;
+    text-transform:uppercase;text-shadow:var(--glow);margin-top:30px;}
+  #poster .sun-title:empty{display:none;}
+  #poster .sun-sub{font-family:var(--font-display);font-weight:400;font-size:30px;
+    line-height:1.3;letter-spacing:.04em;color:var(--fg-soft);margin-top:18px;max-width:74%;}
+  #poster .sun-sub:empty{display:none;}
+
+  /* availability — two frosted-glass columns */
+  #poster .sun-avail{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:40px;width:100%;}
+  #poster .sun-avail:empty{display:none;}
+  #poster .sun-slot{flex:0 1 330px;padding:20px 24px;
+    background:rgba(var(--scrim),.16);border:1px solid var(--fg-line);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    font-size:23px;font-weight:500;letter-spacing:.06em;line-height:1.35;}
+
+  /* specs row */
+  #poster .sun-specs{margin-top:24px;font-size:21px;font-weight:400;
+    letter-spacing:.16em;text-indent:.16em;text-transform:uppercase;color:var(--fg-soft);}
+  #poster .sun-specs:empty{display:none;}
+
+  /* border-delimited highlight bar */
+  #poster .sun-features{display:flex;justify-content:center;width:100%;margin-top:40px;
+    border-top:1px solid var(--fg-rule);border-bottom:1px solid var(--fg-rule);}
+  #poster .sun-features:empty{display:none;}
+  #poster .sun-feature{flex:1 1 0;max-width:220px;padding:20px 14px;
+    font-size:15px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;line-height:1.3;}
+  #poster .sun-feature + .sun-feature{border-left:1px solid var(--fg-rule);}
+
+  /* price + framed CTA */
+  #poster .sun-price{font-family:var(--font-display);font-weight:500;font-size:42px;
+    letter-spacing:.05em;margin-top:36px;text-shadow:var(--glow);}
+  #poster .sun-price:empty{display:none;}
+  #poster .sun-price::before{content:"Precio";display:block;font-family:var(--font-body);
+    font-size:12px;font-weight:600;letter-spacing:.36em;text-indent:.36em;
+    text-transform:uppercase;color:var(--fg-soft);margin-bottom:9px;}
+  #poster .sun-cta{margin-top:34px;align-self:center;font-family:var(--font-body);
+    font-weight:600;font-size:21px;letter-spacing:.28em;text-indent:.28em;
+    text-transform:uppercase;padding:19px 44px;border:1px solid var(--fg-line);color:var(--fg);}
+  #poster .sun-cta[hidden]{display:none;}
+
+  #poster.layout-sunset .inner,#poster.layout-sunset .frame,#poster.layout-sunset .band,
+  #poster.layout-sunset .rental-topbar,#poster.layout-sunset .rental-panel,
+  #poster.layout-sunset .rental-frame{display:none;}
+  #poster.layout-sunset .sunset{display:flex;}
+  #poster.layout-sunset .rental-grad{display:block;}
+
   /* ---------- Optional PNG logo (all layouts) ---------- */
   #poster .logo{position:absolute;top:var(--logo-top,56px);z-index:6;
     width:var(--logo-w,200px);height:auto;object-fit:contain;
@@ -532,6 +599,17 @@
           </div>
         </div>
 
+        <div class="space-y-4">
+          <div>
+            <span class="section-label">Sunset Living</span>
+            <p class="mt-1 text-[11px] leading-snug" style="color:var(--muted)">Editorial layout. Eyebrow, headline and descriptive line come from <em>Content</em>; the season + location/type line from the offer panel's <em>Top line 1</em> (split on the first “·”); the availability grid from the <em>period table</em>; the specs row from <em>Amenities</em>; the price from <em>Pricing</em>. Set the four highlight-bar labels below.</p>
+          </div>
+          <div class="space-y-1.5">
+            <label class="field-label" for="sunHighlights">Highlight bar <span class="normal-case tracking-normal">(· | or , separated — up to 4)</span></label>
+            <input class="input sm" id="sunHighlights" value="Vista Panorámica · Acceso Privado · Lounge Azotea · Estacionamiento" />
+          </div>
+        </div>
+
         <hr style="border-color:var(--border)" />
 
         <div class="space-y-3">
@@ -546,6 +624,7 @@
               <input type="file" id="upload" accept="image/*"
                 class="mt-1.5 block w-full text-xs text-[color:var(--muted)] file:mr-3 file:rounded file:border-0 file:bg-[color:var(--panel-2)] file:px-3 file:py-2 file:text-xs file:text-[color:var(--text)] hover:file:bg-[#2c313a]" />
             </label>
+            <input type="url" id="bgUrl" placeholder="…or paste an image URL" class="input sm" />
           </div>
           <div id="bgSolidControls" hidden class="flex items-center gap-2">
             <input type="color" id="bgColor" value="#12161b" class="h-7 w-10 shrink-0 rounded border-0 bg-transparent" style="cursor:pointer" aria-label="Background colour" />
@@ -671,6 +750,18 @@
             </div>
           </div>
 
+          <div class="sunset" id="p-sunset">
+            <div class="sun-eyebrow" id="p-sun-eyebrow"></div>
+            <div class="sun-meta" id="p-sun-meta"></div>
+            <div class="sun-title" id="p-sun-title"></div>
+            <div class="sun-sub" id="p-sun-sub"></div>
+            <div class="sun-avail" id="p-sun-avail"></div>
+            <div class="sun-specs" id="p-sun-specs"></div>
+            <div class="sun-features" id="p-sun-features"></div>
+            <div class="sun-price" id="p-sun-price"></div>
+            <div class="sun-cta" id="p-sun-cta" hidden></div>
+          </div>
+
           <img class="logo" id="p-logo" alt="" crossorigin="anonymous" hidden />
         </div>
       </div>
@@ -702,7 +793,8 @@
     { cls:"layout-bar",       name:"Lower Bar", note:"Dark band, magazine cover" },
     { cls:"layout-split",     name:"Top & Bottom", note:"Header pinned, copy in lower half" },
     { cls:"layout-rental",    name:"Rental Availability", note:"Agency bar + lower info panel" },
-    { cls:"layout-cover",     name:"Cover / End Page", note:"Centred branding slide" }
+    { cls:"layout-cover",     name:"Cover / End Page", note:"Centred branding slide" },
+    { cls:"layout-sunset",    name:"Sunset Living", note:"Editorial · availability · framed CTA" }
   ];
   const fontPresets = [
     { key:"classic", name:"Classic Estate", note:"Cinzel · Parisienne",
@@ -737,7 +829,8 @@
     { name:"Blue Hour",       note:"Cool, structured",  format:"p45", layout:"layout-centered",  font:"couture", accent:"steel",     tint:"rgba(28,54,96,.32)",   overlay:52, spec:"columns" },
     { name:"Penthouse Story", note:"9:16 with badge",   format:"st",  layout:"layout-centered",  font:"coastal", accent:"rose",      tint:"rgba(90,52,74,.28)",   overlay:60, spec:"columns" },
     { name:"Rental Availability", note:"Agency bar + periods", format:"p45", layout:"layout-rental", font:"classic", accent:"brass", tint:"rgba(18,26,42,.20)", overlay:26, spec:"icons" },
-    { name:"Cover / End Page", note:"Branding slide", format:"p45", layout:"layout-cover", font:"classic", accent:"brass", tint:"transparent", overlay:22, spec:"inline" }
+    { name:"Cover / End Page", note:"Branding slide", format:"p45", layout:"layout-cover", font:"classic", accent:"brass", tint:"transparent", overlay:22, spec:"inline" },
+    { name:"Sunset Living / Editorial", note:"Season · availability · precio · CTA", format:"p45", layout:"layout-sunset", font:"couture", accent:"brass", tint:"rgba(198,120,60,.30)", overlay:48, spec:"inline" }
   ];
   const autoPresets = [
     { name:"Showroom",        note:"Feature vehicle",   format:"p45", layout:"layout-centered",  font:"modern",  accent:"steel", tint:"rgba(20,28,40,.32)", overlay:56, spec:"icons" },
@@ -778,13 +871,14 @@
       labels:{ offer:'Rental Availability', note:'Two-line header, property type, title, availability periods, amenities and a contact CTA. Empty fields collapse automatically.',
         rSeason:'Top line 1 — season & type', rAgency:'Top line 2 — agency', rType:'Property type', rTypePh:'Casa / Apartamento / Condo',
         periods:'Availability periods', availHead:'Disponibilidad · Availability', features:'Amenities', featuresHint:'bed · bath · pool · garage' },
-      seed:{ header:'Presented By Meridian Estates', title:'The Hillcrest Residence', subtitle:'Beverly Hills, California',
-        price:'$4,750,000', plan:'20% Down · 36-Month Plan',
-        specs:[['Bedrooms','5 Bed'],['Bathrooms','6 Bath'],['Interior','6,200 Sq Ft']],
-        rSeason:'Temporada 2026 · Alquiler', rAgency:'Ofrecido por Meridian Estates', rType:'Villa', rZona:'',
-        rP:['Dec 15–31','Jan 15–31','Jan 1–15','Feb 1–15'], rA:['5 Bed','6 Bath','Pool','3 Garage'],
-        rCta:'Consúltenos', rPhone:'+598 99 123 456', rCtaWeb:'Visite Nuestro Sitio Web',
-        rListingUrl:'https://meridianestates.com/playa-mansa', covPhone:'+598 99 123 456', covWebsite:'meridianestates.com' } },
+      seed:{ header:'Presented by Inmobiliaria Calypso', title:'Playa Mansa', subtitle:'Frente al mar, a pasos de la arena',
+        price:'$3.500 / mes', plan:'Mín. 2 semanas · Servicios incluidos',
+        specs:[['Dormitorios','3'],['Baños','3'],['Superficie','320 m²']],
+        rSeason:'Temporada 2027 · Punta del Este — Casa', rAgency:'Ofrecido por Inmobiliaria Calypso', rType:'Casa', rZona:'',
+        rP:['Dec 15–31','Jan 15–31','Jan 1–15','Feb 1–15'], rA:['3 Dormitorios','3 Baños','Pool','Garage'],
+        sunHi:'Vista Panorámica · Acceso Privado · Lounge Azotea · Estacionamiento',
+        rCta:'Consúltenos', rPhone:'+598 99 123 456', rCtaWeb:'Ver Disponibilidad',
+        rListingUrl:'https://inmobiliariacalypso.com/playa-mansa', covPhone:'+598 99 123 456', covWebsite:'inmobiliariacalypso.com' } },
     { id:'autos', name:'Autos Usados', accent:'steel', presets: autoPresets, icons: iconSets.autos,
       labels:{ offer:'Vehicle Offer', note:'Two-line header, body/fuel type, model, financing terms, key specs and a contact CTA. Empty fields collapse automatically.',
         rSeason:'Top line 1 — campaign', rAgency:'Top line 2 — dealership', rType:'Body / fuel type', rTypePh:'Sedán / SUV / Pickup',
@@ -794,6 +888,7 @@
         specs:[['Año','2021'],['Kilómetros','48.000 km'],['Motor','2.8 TDI']],
         rSeason:'Usados Certificados 2026', rAgency:'Ofrecido por AutoNorte', rType:'Pickup · Diésel', rZona:'',
         rP:['Entrega 30%','60 cuotas','Tasa fija','Gestoría incluida'], rA:['5 Plazas','Diésel','2.8 TDI','2021'],
+        sunHi:'Único Dueño · Service Oficial · Garantía · Permuta',
         rCta:'Consúltenos', rPhone:'+598 99 555 222', rCtaWeb:'Ver Ficha Completa',
         rListingUrl:'https://autonorte.com/hilux-srv', covPhone:'+598 99 555 222', covWebsite:'autonorte.com' } },
     { id:'hotel', name:'Hospitalidad', accent:'rose', presets: hotelPresets, icons: iconSets.hotel,
@@ -805,6 +900,7 @@
         specs:[['Huéspedes','2–4'],['Dormitorios','2'],['Vista','Al mar']],
         rSeason:'Temporada 2026 · Alojamiento', rAgency:'Ofrecido por Casa del Faro', rType:'Suite · Frente al mar', rZona:'',
         rP:['15–31 Dic','1–15 Ene','15–31 Ene','1–15 Feb'], rA:['2–4 Huésp.','Wi-Fi','Piscina','Desayuno'],
+        sunHi:'Vista al Mar · Desayuno Incluido · Piscina · Wi-Fi',
         rCta:'Reservá Ahora', rPhone:'+598 99 777 888', rCtaWeb:'Ver Disponibilidad',
         rListingUrl:'https://casadelfaro.com/suite-vista-mar', covPhone:'+598 99 777 888', covWebsite:'casadelfaro.com' } }
   ];
@@ -936,6 +1032,55 @@
   ['rP1','rP2','rP3','rP4'].forEach(id => $(id).addEventListener('input', renderPeriods));
   ['rA1','rA2','rA3','rA4'].forEach(id => $(id).addEventListener('input', renderAmenities));
 
+  /* ---- Sunset Living / Editorial: eyebrow · season/meta · headline · sub ·
+         frosted availability · specs row · highlight bar · precio · framed CTA ---- */
+  function renderSunset(){
+    // branding eyebrow
+    $('p-sun-eyebrow').textContent = $('header').value.trim();
+
+    // season tag + location/type — rSeason split on the first "·"
+    const rawMeta = $('rSeason').value.trim();
+    let metaHtml = '';
+    if (rawMeta){
+      const i = rawMeta.indexOf('·');
+      const season = (i > -1 ? rawMeta.slice(0, i) : rawMeta).trim();
+      const place  = i > -1 ? rawMeta.slice(i + 1).trim() : '';
+      metaHtml = '<span class="sun-season">' + esc(season) + '</span>'
+               + (place ? '<span class="sun-place">' + esc(place) + '</span>' : '');
+    }
+    $('p-sun-meta').innerHTML = metaHtml;
+
+    // headline + descriptive line
+    $('p-sun-title').textContent = $('title').value.trim();
+    $('p-sun-sub').textContent   = $('subtitle').value.trim();
+
+    // availability — two frosted columns: [P1,P3] and [P2,P4]
+    const p = ['rP1','rP2','rP3','rP4'].map(id => $(id).value.trim());
+    const slots = [[p[0], p[2]], [p[1], p[3]]]
+      .map(pair => pair.filter(Boolean).join('  |  '))
+      .filter(Boolean);
+    $('p-sun-avail').innerHTML = slots.map(s => '<div class="sun-slot">' + esc(s) + '</div>').join('');
+
+    // specs row ← amenity fields
+    const specs = ['rA1','rA2','rA3','rA4'].map(id => $(id).value.trim()).filter(Boolean);
+    $('p-sun-specs').textContent = specs.join('   ·   ');
+
+    // border-delimited highlight bar ← Sunset highlight field (· | or , separated)
+    const hi = $('sunHighlights').value.split(/\s*[·|,]\s*/).map(t => t.trim()).filter(Boolean).slice(0, 4);
+    $('p-sun-features').innerHTML = hi.map(h => '<div class="sun-feature">' + esc(h) + '</div>').join('');
+
+    // price + framed CTA
+    $('p-sun-price').textContent = $('price').value.trim();
+    const cta = $('rCta').value.trim(), phone = $('rPhone').value.trim();
+    const out = $('p-sun-cta');
+    out.textContent = cta || phone;
+    out.hidden = !(cta || phone);
+    fit();
+  }
+  ['header','title','subtitle','price','rSeason','rP1','rP2','rP3','rP4',
+   'rA1','rA2','rA3','rA4','rCta','rPhone','sunHighlights']
+    .forEach(id => $(id).addEventListener('input', renderSunset));
+
   const gradEl = $('gradIntensity'), gradVal = $('gradVal');
   const gradStartEl = $('gradStart'), gradStartVal = $('gradStartVal');
   function applyGrad(v){
@@ -954,9 +1099,9 @@
 
   /* ---- specs ---- */
   const specData = [
-    { k:"Bedrooms",  v:"5 Bed" },
-    { k:"Bathrooms", v:"6 Bath" },
-    { k:"Interior",  v:"6,200 Sq Ft" }
+    { k:"Dormitorios", v:"3" },
+    { k:"Baños",       v:"3" },
+    { k:"Superficie",  v:"320 m²" }
   ];
   let specStyle = "inline";
 
@@ -1307,10 +1452,11 @@
     setField('rType', s.rType); setField('rZona', s.rZona);
     ['rP1','rP2','rP3','rP4'].forEach((id, i) => setField(id, s.rP[i]));
     ['rA1','rA2','rA3','rA4'].forEach((id, i) => setField(id, s.rA[i]));
+    setField('sunHighlights', s.sunHi);
     setField('rCta', s.rCta); setField('rPhone', s.rPhone); setField('rCtaWeb', s.rCtaWeb);
     setField('rListingUrl', s.rListingUrl);
     setField('covPhone', s.covPhone); setField('covWebsite', s.covWebsite);
-    renderPeriods(); renderAmenities(); renderCta(); renderSpecs(); syncTopbar(); syncZona();
+    renderPeriods(); renderAmenities(); renderCta(); renderSpecs(); syncTopbar(); syncZona(); renderSunset();
 
     $('designPresets').innerHTML = '';
     designGroup = chipGroup($('designPresets'), v.presets, applyDesignPreset);
@@ -1351,6 +1497,10 @@
     const reader = new FileReader();
     reader.onload = () => { img.src = reader.result; setActiveSwatch(null); };
     reader.readAsDataURL(file);
+  });
+  $('bgUrl').addEventListener('change', () => {
+    const u = $('bgUrl').value.trim();
+    if (u){ img.src = u; setActiveSwatch(null); }
   });
 
   /* ---- Ken Burns effect (preview only) ---- */
@@ -1654,6 +1804,7 @@
   applyBgMode();
   applyCoverLogo();
   applyVertical(verticals[0]);
+  renderSunset();
   fit();
 })();
 </script>
